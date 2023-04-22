@@ -1,0 +1,41 @@
+create database sistema_gerencial;
+
+create table endereco(
+	id int PRIMARY key AUTO_INCREMENT,
+    rua varchar(255) not null,
+    numero int not null,
+    complemento varchar(255),
+    bairro varchar(255) not null,
+    cidade varchar(255) not null,
+    uf varchar(2) not null 
+);
+
+
+create table dados_login(
+    id int primary key AUTO_INCREMENT,
+    login varchar(255) not null, 
+    senha varchar(255) not null,
+    perfil varchar(4) not null    
+);
+
+create table contato(
+	id int primary key AUTO_INCREMENT,
+    telefone varchar(15) not null,
+    celular varchar(15) not null,
+    email varchar(100) not null
+);
+
+create table usuario (
+	id int PRIMARY key AUTO_INCREMENT,
+    nome varchar(255) not null,
+    cpf varchar(11) not null,
+    data_nascimento date not null,
+    sexo char not null,
+    dados_login_id int not null,
+    endereco_id int not null,
+    contato_id int not null
+);
+
+alter table usuario add FOREIGN key (endereco_id) REFERENCES endereco(id);
+alter table usuario add FOREIGN key (dados_login_id) REFERENCES dados_login(id);
+alter table usuario add FOREIGN key (contato_id) REFERENCES contato(id);

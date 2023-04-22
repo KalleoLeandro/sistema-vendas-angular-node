@@ -1,0 +1,9 @@
+
+.botoes{    
+    display: flex;
+    justify-content: space-around;
+}
+
+#modal{
+    display: none;
+}
