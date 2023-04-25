@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginService } from '../../services/login.service';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ConsultasService } from '../../services/consultas.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 import { CadastrosService } from '../../services/cadastros.service';
 
 @Component({
-  selector: 'app-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.css']
+  selector: 'app-editar-usuario',
+  templateUrl: './editar-usuario.component.html',
+  styleUrls: ['./editar-usuario.component.css']
 })
-export class CadastroComponent {
+export class EditarUsuarioComponent {
 
   public perfil: Array<string> = ["dev", "user", "adm"];
   public resposta: string = "";
@@ -99,7 +99,7 @@ export class CadastroComponent {
     }
   ];
 
-  public cadastroForm: FormGroup = this.formBuilder.group({
+  public editForm: FormGroup = this.formBuilder.group({
     nome: [''],
     cpf: [''],
     dataNascimento: [''],
@@ -112,7 +112,7 @@ export class CadastroComponent {
     uf: [{ value: '', disabled: true }],
     telefone: [''],
     celular: [''],
-    email:[''],
+    email: [''],
     login: [''],
     senha: [''],
     perfil: ['']
@@ -120,28 +120,72 @@ export class CadastroComponent {
 
   public token = localStorage.getItem('authorization');
 
-  constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router) {
-    /*if (this.token === null) {
+  constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router, private cdRef: ChangeDetectorRef) {
+    if (this.token === null) {
       this.router.navigate(['/']);
     } else {
       this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
-        next: (res) => {          
-        },          
+        next: async (res) => {        
+          await this.carregaDados();
+          setTimeout(() => {
+            console.log(this.editForm);
+          }, 10000);
+        },
         error: (err) => {
           console.log(err);
           localStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
-    }*/
+    }
   }
 
+  public async carregaDados() {
+    await this.consultaService.dadosEditar.subscribe(retorno => {
+      const id = retorno;
+      this.consultaService.consultaUsuarioPorId(id).subscribe({
+        next: (res) => {
+          const valores:any = res[0][0];              
+          this.preencheFormulario(valores);          
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    });
+  }
+
+  public preencheFormulario(valores: any) {
+    this.editForm.patchValue({
+      nome: valores.nome,
+      /*cpf: valores.cpf,
+      dataNascimento: valores.data_nascimento,
+      sexo: valores.sexo,
+      cep: valores.cep,
+      rua: [{ value: valores.rua, disabled: true }],
+      numero: valores.numero,
+      bairro: [{ value: valores.bairro, disabled: true }],
+      cidade: [{ value: valores.cidade, disabled: true }],
+      uf: [{ value: valores.uf, disabled: true }],
+      telefone: valores.telefone,
+      celular: valores.celular,
+      email: valores.email,
+      login: valores.login,
+      senha: '',
+      perfil: valores.perfil
+      */
+    });    
+  }
+
+
+
+
   public async submitForm() {
-    if (this.cadastroForm.valid) {
-      this.consultaService.validarDados(this.cadastroForm).subscribe({
-        next: (res) => {      
-          
+    if (this.editForm.valid) {
+      this.consultaService.validarDados(this.editForm).subscribe({
+        next: (res) => {
           this.cadastrarUsuario();
+          this.editForm.reset();
         },
         error: (err) => {
           console.log(err);
@@ -153,10 +197,10 @@ export class CadastroComponent {
   }
 
   public async consultarCep() {
-    const cep = (this.cadastroForm.controls['cep'].value).replace("-", "");
+    const cep = (this.editForm.controls['cep'].value).replace("-", "");
     this.consultaService.consultaCep(cep).subscribe({
       next: (res) => {
-        this.cadastroForm.patchValue({
+        this.editForm.patchValue({
           rua: res.logradouro,
           bairro: res.bairro,
           cidade: res.localidade,
@@ -169,20 +213,24 @@ export class CadastroComponent {
     });
   }
 
+  public imprimeForm() {
+    console.log(this.editForm);
+  }
+
   public limparFormulario() {
     //this.cadastroForm.reset();
-    this.cadastroForm.patchValue({
-      sexo:'m'
+    this.editForm.patchValue({
+      sexo: 'm'
     })
   }
 
   public cadastrarUsuario() {
-    this.cadastrosService.cadastrarUsuario(this.cadastroForm).subscribe({
-      next: (res)=>{     
+    this.cadastrosService.cadastrarUsuario(this.editForm).subscribe({
+      next: (res) => {
         this.resposta = res;
-        document.getElementById("botaoModal")?.click();               
+        document.getElementById("botaoModal")?.click();
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
       }
     });

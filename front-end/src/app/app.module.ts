@@ -6,8 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import { MainComponent } from './shared/components/main/main.component';
-import { CadastroComponent } from './shared/components/cadastro/cadastro.component';
-import { ConsultaComponent } from './shared/components/consulta/consulta.component';
+import { CadastroUsuarioComponent } from './shared/components/cadastro-usuario/cadastro-usuario.component';
+import { ConsultaUsuarioComponent } from './shared/components/consulta-usuario/consulta-usuario.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { ErroComponent } from './shared/components/erro/erro.component';
 import { LoginService } from './shared/services/login.service';
@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConsultasService } from './shared/services/consultas.service';
 import { NgxMaskModule } from 'ngx-mask';
 import { CadastrosService } from './shared/services/cadastros.service';
+import { EditarUsuarioComponent } from './shared/components/editar-usuario/editar-usuario.component';
 
 
 @NgModule({
@@ -22,10 +23,11 @@ import { CadastrosService } from './shared/services/cadastros.service';
     AppComponent,
     LoginComponent,
     MainComponent,
-    CadastroComponent,
-    ConsultaComponent,
+    CadastroUsuarioComponent,
+    ConsultaUsuarioComponent,
     DashboardComponent,
     ErroComponent,
+    EditarUsuarioComponent,
   ],
   imports: [
     BrowserModule,

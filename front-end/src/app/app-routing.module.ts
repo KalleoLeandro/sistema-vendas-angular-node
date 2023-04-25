@@ -2,17 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './shared/components/login/login.component';
 import { MainComponent } from './shared/components/main/main.component';
-import { CadastroComponent } from './shared/components/cadastro/cadastro.component';
-import { ConsultaComponent } from './shared/components/consulta/consulta.component';
+import { CadastroUsuarioComponent } from './shared/components/cadastro-usuario/cadastro-usuario.component';
+import { ConsultaUsuarioComponent } from './shared/components/consulta-usuario/consulta-usuario.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { ErroComponent } from './shared/components/erro/erro.component';
+import { EditarUsuarioComponent } from './shared/components/editar-usuario/editar-usuario.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'sistema', component: MainComponent, children: [
     { path: 'home', component: DashboardComponent},
-    { path: 'listarusuarios', component: ConsultaComponent},
-    { path: 'cadastrarusuarios', component: CadastroComponent}]
+    { path: 'listarusuarios', component: ConsultaUsuarioComponent},
+    { path: 'cadastrarusuarios', component: CadastroUsuarioComponent},
+    { path: 'editarusuario', component: EditarUsuarioComponent}]
   },
   { path: '404', component: ErroComponent},
   {path: '**', component: ErroComponent}

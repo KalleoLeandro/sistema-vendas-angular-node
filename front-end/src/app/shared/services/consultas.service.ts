@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -13,6 +13,8 @@ export class ConsultasService {
       'Content-Type': 'application/json',      
     })
   }
+  
+  public dadosEditar = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
@@ -23,4 +25,17 @@ export class ConsultasService {
   public consultaCep(cep:string): Observable<any>{
     return this.http.get<any>(`https://viacep.com.br/ws/${cep}/json`);    
   }
+
+  public consultaListaUsuarios(): Observable<any>{
+    return this.http.get<any>(`http://localhost:3000/listausuarios`);    
+  }
+
+  public consultaUsuarioPorId(id:number): Observable<any>{
+    return this.http.get<any>(`http://localhost:3000/listausuarioporid?id=${id}`);
+  }
+
+  public enviarDados(id:number){
+    this.dadosEditar.emit(id);
+  }
+
 }

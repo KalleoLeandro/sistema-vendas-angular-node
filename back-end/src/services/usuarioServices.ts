@@ -1,12 +1,12 @@
 const pool = require('../db/conn');
-import { UsuarioRequest } from '../models/UsuarioRequest';
+import { ListaUsuariosResponse, UsuarioEditResponse, UsuarioRequest } from '../models/Usuario';
 
 export const cadastrarUsuario = async (usuario: UsuarioRequest): Promise<boolean> => {
     let teste: boolean = true;
     let endereco_id: number = await cadastrarEndereco(usuario, teste);
     let contato_id: number = await cadastrarContato(usuario, teste);
     let dados_login_id: number = await cadastrarLogin(usuario, teste);
-    await cadastrarDadosPessoais(usuario, teste, endereco_id, contato_id, dados_login_id);    
+    await cadastrarDadosPessoais(usuario, teste, endereco_id, contato_id, dados_login_id);
     if (teste) {
         await commit();
     } else {
@@ -62,20 +62,54 @@ export const cadastrarDadosPessoais = async (usuario: UsuarioRequest, teste: boo
     });
 }
 
+export const listarUsuarios = async (): Promise<Array<ListaUsuariosResponse>> => {
+    const sql = `select * from usuario`;
+    const promisePool = pool.promise();
+    try {
+        const [rows]: [Array<ListaUsuariosResponse>] = await promisePool.query(sql);
+        return rows;
+    } catch (err) {
+        console.error(err);
+        return [];
+    }
+}
+
+export const buscarUsuarioPorId = async (id: any): Promise<UsuarioEditResponse> => {
+    const sql = `select usuario.nome, usuario.cpf, usuario.data_nascimento, usuario.sexo, usuario.dados_login_id, usuario.endereco_id, usuario.contato_id,
+    contato.telefone, contato.celular, contato.email,
+    endereco.cep, endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, endereco.uf,
+    dados_login.login, dados_login.perfil
+    from usuario inner join contato inner join endereco inner join dados_login 
+    on contato.id = usuario.contato_id AND
+    endereco.id = usuario.endereco_id AND
+    dados_login.id = usuario.dados_login_id
+    where usuario.id = ?
+    LIMIT 1`;
+    const values = [id];
+    const promisePool = pool.promise();
+    try {
+        const user: UsuarioEditResponse = await promisePool.query(sql, values);
+        return user;
+    } catch (err) {
+        console.error(err);
+        throw new Error;
+    }
+}
+
+
 export const rollback = () => {
-    pool.getConnection((err:Error,connection:any)=>{
-        connection.rollback(()=>{
+    pool.getConnection((err: Error, connection: any) => {
+        connection.rollback(() => {
             connection.release();
         })
 
     });
 }
 
-export const commit = () => {    
-    pool.getConnection((err:Error,connection:any)=>{
-        connection.commit(()=>{
+export const commit = () => {
+    pool.getConnection((err: Error, connection: any) => {
+        connection.commit(() => {
             connection.release();
-        })
-
+        });
     });
 }        

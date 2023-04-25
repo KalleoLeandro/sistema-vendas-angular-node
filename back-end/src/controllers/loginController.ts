@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { decriptografia } from '../utils/utils';
-import * as jwt from 'jsonwebtoken';
+
+import { LoginRequest } from '../models/Login';
+import { validarToken, buscarLogin, gerarToken, validarLogin, retornaLogin } from '../services/loginServices';
 
 const pool = require('../db/conn');
 var forge = require('node-forge');
@@ -8,43 +10,60 @@ var forge = require('node-forge');
 export const logar = async (req: Request, res: Response) => {
 
     const hash: string = req.body.hash;
-    const json = JSON.parse(decriptografia(hash));
-
-    const sql = `select * from login where usuario = ? and senha = ?`;
-    const values = [json.usuario, json.senha];
-    await pool.query(sql, values, (err: Error, data: any) => {
-        if (err) {            
-            res.status(500);
-            res.end();
+    const login: LoginRequest = JSON.parse(decriptografia(hash));
+    try {
+        const validar: number = await validarLogin(login);
+        if (validar === 401) {
+            res.status(401).end();
+        } else if (validar === 200) {
+            res.status(200);
+            const token: any = await gerarToken(await buscarLogin(login));
+            res.json({ auth: true, token: token });
         } else {
-            const usuario = data;            
-            if (usuario.length > 0) {
-                res.status(200);                               
-                const token: any = jwt.sign({ userId: usuario[0].id, userType: usuario[0].tipoUsuario }, 'random_key', { expiresIn: '1h' });                
-                res.json({ auth: true, token: token });
-            } else {
-                res.status(401);
-                res.end();
-            }
+            res.status(500).end();
         }
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
 }
 
-export const validarToken = async (req: Request, res: Response) => {
-    const token = req.headers.authorization;      
-    if (!token) {
-        return res.status(401).json({ message: 'Token não fornecido' });
-    }
-    try{
-        await jwt.verify(token, 'random_key', (err, decoded) => {
-            if (err) {
-                return res.status(403).json({ message: 'Falha na autenticação do token' });
-            }                    
-        });
-        // O token é válido, continue com a execução da rota protegida    
-        res.status(200).end();
-    }
-    catch(e){
+export const validaToken = async (req: Request, res: Response) => {
+    const token: string = req.headers.authorization as string;
+    try {
+        const resposta = await validarToken(token);
+        switch (resposta) {
+            case 401:
+                res.status(401).end();
+                break;
+            case 403:
+                res.status(403).end();
+                break;
+            case 200:
+                res.status(200).end();
+                break;
+            default:
+                res.status(500).end();
+                break;
+        }
+    } catch (err) {
+        console.error(err);
         res.status(500).end();
-    }    
+    }
+}
+
+export const userPorToken = async (req: Request, res: Response) => {
+    const token: string = req.headers.authorization as string;
+    try {
+        const nomeLogin: string = await retornaLogin(token);        
+        if(nomeLogin){
+            res.status(200).json({ login: nomeLogin });
+        } else {
+
+        }
+        res.status(500).end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
 }

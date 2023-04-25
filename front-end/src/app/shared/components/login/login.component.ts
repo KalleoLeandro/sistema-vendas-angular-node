@@ -13,7 +13,7 @@ import { Cripto } from '../../models/Cripto';
   styleUrls: ['./login.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
   public publicKey = `-----BEGIN PUBLIC KEY-----
   MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyNuTGqyEJCxsdSR1regd
@@ -41,6 +41,18 @@ export class LoginComponent {
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private router: Router) {
 
+  }
+  ngOnInit(): void {
+    this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      next: (res)=>{        
+        this.router.navigate(['../sistema/home']);
+      },
+      error: (err)=>{        
+        if(!localStorage.getItem('authorization') === null){
+          console.error("Token expirado");
+        }        
+      }
+    })
   }
 
   public pubKey: any = forge.pki.publicKeyFromPem(this.publicKey);
@@ -72,8 +84,7 @@ export class LoginComponent {
           this.invalido = true;
         }
       }
-    });
-  }
+    });  }
 
   public change() {    
     if (this.loginForm.controls['usuario'].value != '' || this.loginForm.controls['senha'].value != '') {
