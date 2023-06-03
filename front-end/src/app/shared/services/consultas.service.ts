@@ -8,18 +8,18 @@ import { Observable } from 'rxjs';
 })
 export class ConsultasService {
 
+  private url: string = "http://localhost:3000/";
+
    public httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',      
     })
-  }
-  
-  public dadosEditar = new EventEmitter();
+  }  
 
   constructor(private http: HttpClient) { }
 
   public validarDados(formulario:FormGroup):Observable<boolean>{
-    return this.http.post<boolean>(`http://localhost:3000/validarformulario`, formulario.getRawValue() , this.httpOptions);    
+    return this.http.post<boolean>(`${this.url}validarformulario`, formulario.getRawValue() , this.httpOptions);    
   }
 
   public consultaCep(cep:string): Observable<any>{
@@ -27,15 +27,10 @@ export class ConsultasService {
   }
 
   public consultaListaUsuarios(): Observable<any>{
-    return this.http.get<any>(`http://localhost:3000/listausuarios`);    
+    return this.http.get<any>(`${this.url}listausuarios`);    
   }
 
   public consultaUsuarioPorId(id:number): Observable<any>{
-    return this.http.get<any>(`http://localhost:3000/listausuarioporid?id=${id}`);
+    return this.http.get<any>(`${this.url}listausuarioporid?id=${id}`);
   }
-
-  public enviarDados(id:number){
-    this.dadosEditar.emit(id);
-  }
-
 }

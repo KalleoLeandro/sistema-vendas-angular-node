@@ -3,6 +3,7 @@ import { LoginService } from '../../services/login.service';
 import { ConsultasService } from '../../services/consultas.service';
 import { Router } from '@angular/router';
 import { ListaUsuariosResponse } from '../../models/User';
+import { CadastrosService } from '../../services/cadastros.service';
 
 
 @Component({
@@ -14,8 +15,11 @@ export class ConsultaUsuarioComponent implements OnInit{
   
   public token = localStorage.getItem('authorization');
   public lista:Array<ListaUsuariosResponse> = [];  
+  public resposta:string = "";
+  public confirmacao:boolean = true;
+  public userId:number=0;
 
-  constructor(private loginService: LoginService, private consultaService: ConsultasService, private router: Router){
+  constructor(private loginService: LoginService, private cadastrosService: CadastrosService,private consultaService: ConsultasService, private router: Router){
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
@@ -53,8 +57,32 @@ export class ConsultaUsuarioComponent implements OnInit{
     });
   }
 
-  public editarUsuairo(id:number){    
-    this.consultaService.enviarDados(id); 
-    this.router.navigate(['./sistema/editarusuario']);
+  public excluirUsuario(id:number){
+    this.confirmacao = true;
+    this.userId = id;
+    this.resposta = "Tem certeza que deseja excluir esse usuário?";    
+    document.getElementById('botaoModal')?.click();
+  }
+
+
+  public confirmar(){
+    this.confirmacao = false;    
+    this.cadastrosService.excluirUsuario(this.userId).subscribe({
+      next: (res) =>{
+        this.resposta = "Usuário excluido com sucesso!";
+        document.getElementById('botaoModal')?.click();      
+      },
+      error: (err) =>{
+        console.log(err);
+      }
+    });        
+  }
+
+  public concluir(){    
+    //window.location.reload();
+  }
+
+  public editarUsuairo(id:number){        
+    this.router.navigate([`./sistema/editarusuario/${id}`]);
   }
 }

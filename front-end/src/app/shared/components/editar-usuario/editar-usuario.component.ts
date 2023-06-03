@@ -1,16 +1,18 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ConsultasService } from '../../services/consultas.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { CadastrosService } from '../../services/cadastros.service';
+import { first } from 'rxjs';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-editar-usuario',
   templateUrl: './editar-usuario.component.html',
   styleUrls: ['./editar-usuario.component.css']
 })
-export class EditarUsuarioComponent {
+export class EditarUsuarioComponent implements OnInit {
 
   public perfil: Array<string> = ["dev", "user", "adm"];
   public resposta: string = "";
@@ -100,6 +102,10 @@ export class EditarUsuarioComponent {
   ];
 
   public editForm: FormGroup = this.formBuilder.group({
+    id: [''],
+    endereco_id: [''],
+    contato_id: [''],
+    dados_login_id: [''],
     nome: [''],
     cpf: [''],
     dataNascimento: [''],
@@ -118,18 +124,18 @@ export class EditarUsuarioComponent {
     perfil: ['']
   });
 
+  public id: any;
+
+  public dados: any;
   public token = localStorage.getItem('authorization');
 
-  constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router, private cdRef: ChangeDetectorRef) {
+  constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router, private activatedRoute: ActivatedRoute) {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
       this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
-        next: async (res) => {        
-          await this.carregaDados();
-          setTimeout(() => {
-            console.log(this.editForm);
-          }, 10000);
+        next: (res) => {
+
         },
         error: (err) => {
           console.log(err);
@@ -140,60 +146,36 @@ export class EditarUsuarioComponent {
     }
   }
 
-  public async carregaDados() {
-    await this.consultaService.dadosEditar.subscribe(retorno => {
-      const id = retorno;
-      this.consultaService.consultaUsuarioPorId(id).subscribe({
-        next: (res) => {
-          const valores:any = res[0][0];              
-          this.preencheFormulario(valores);          
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
+  ngOnInit(): void {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.consultaService.consultaUsuarioPorId(this.id).pipe(first()).subscribe({
+      next: (res) => {
+        this.dados = res[0][0];
+        this.editForm.patchValue({
+          id: this.dados.id,
+          endereco_id: this.dados.endereco_id,
+          contato_id: this.dados.contato_id,
+          dados_login_id: this.dados.dados_login_id,
+          nome: this.dados.nome,
+          cpf: this.dados.cpf,
+          dataNascimento: this.formataData(this.dados.data_nascimento),
+          sexo: this.dados.sexo,
+          cep: this.dados.cep,
+          rua: this.dados.rua,
+          numero: this.dados.numero,
+          bairro: this.dados.bairro,
+          cidade: this.dados.cidade,
+          uf: this.dados.uf,
+          telefone: this.dados.telefone,
+          celular: this.dados.celular,
+          email: this.dados.email,
+          login: this.dados.login,
+          perfil: this.dados.perfil
+        });
+      }, error: (err) => {
+        console.log(err);
+      }
     });
-  }
-
-  public preencheFormulario(valores: any) {
-    this.editForm.patchValue({
-      nome: valores.nome,
-      /*cpf: valores.cpf,
-      dataNascimento: valores.data_nascimento,
-      sexo: valores.sexo,
-      cep: valores.cep,
-      rua: [{ value: valores.rua, disabled: true }],
-      numero: valores.numero,
-      bairro: [{ value: valores.bairro, disabled: true }],
-      cidade: [{ value: valores.cidade, disabled: true }],
-      uf: [{ value: valores.uf, disabled: true }],
-      telefone: valores.telefone,
-      celular: valores.celular,
-      email: valores.email,
-      login: valores.login,
-      senha: '',
-      perfil: valores.perfil
-      */
-    });    
-  }
-
-
-
-
-  public async submitForm() {
-    if (this.editForm.valid) {
-      this.consultaService.validarDados(this.editForm).subscribe({
-        next: (res) => {
-          this.cadastrarUsuario();
-          this.editForm.reset();
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      })
-    } else {
-      console.error("Valores inválidos no formulário");
-    }
   }
 
   public async consultarCep() {
@@ -213,26 +195,31 @@ export class EditarUsuarioComponent {
     });
   }
 
-  public imprimeForm() {
-    console.log(this.editForm);
+  public async submitForm() {    
+    if (this.editForm.valid) {
+      this.consultaService.validarDados(this.editForm).subscribe({
+        next: (res) => {
+          this.cadastrosService.atualizarUsuario(this.editForm).pipe(first()).subscribe(()=>{
+            document.getElementById("botaoModal")?.click();
+          });                    
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+    } else {
+      console.error("Valores inválidos no formulário");
+    }
+  } 
+
+  public redireciona(){
+    this.router.navigate(['./sistema/listarusuarios']);
   }
 
-  public limparFormulario() {
-    //this.cadastroForm.reset();
-    this.editForm.patchValue({
-      sexo: 'm'
-    })
-  }
-
-  public cadastrarUsuario() {
-    this.cadastrosService.cadastrarUsuario(this.editForm).subscribe({
-      next: (res) => {
-        this.resposta = res;
-        document.getElementById("botaoModal")?.click();
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
+  public formataData(data: string): string {
+    const dateStr = data;
+    const date = new Date(dateStr);
+    const formattedDate = date.toISOString().substring(0, 10);
+    return formattedDate;
   }
 }

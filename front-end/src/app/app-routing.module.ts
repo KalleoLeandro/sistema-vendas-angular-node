@@ -14,7 +14,7 @@ const routes: Routes = [
     { path: 'home', component: DashboardComponent},
     { path: 'listarusuarios', component: ConsultaUsuarioComponent},
     { path: 'cadastrarusuarios', component: CadastroUsuarioComponent},
-    { path: 'editarusuario', component: EditarUsuarioComponent}]
+    { path: 'editarusuario/:id', component: EditarUsuarioComponent}]
   },
   { path: '404', component: ErroComponent},
   {path: '**', component: ErroComponent}

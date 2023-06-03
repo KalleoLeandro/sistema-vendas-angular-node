@@ -180,11 +180,15 @@ export class CadastroUsuarioComponent {
     this.cadastrosService.cadastrarUsuario(this.cadastroForm).subscribe({
       next: (res)=>{     
         this.resposta = res;
-        document.getElementById("botaoModal")?.click();               
+        document.getElementById("botaoModal")?.click();           
       },
       error:(err)=>{
         console.log(err);
       }
     });
+  }
+
+  public redirecionar(){
+    this.router.navigate(['/sistema/listarusuarios']);
   }
 }

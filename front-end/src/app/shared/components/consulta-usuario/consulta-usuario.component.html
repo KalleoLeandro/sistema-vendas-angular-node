@@ -3,7 +3,8 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Lista de Usuários</h1>
-    <p class="mb-4">Clique em editar para editar o usuário em questão, cliquem em excluir para excluir o mesmo usuário</p>
+    <p class="mb-4">Clique em editar para editar o usuário em questão, cliquem em excluir para excluir o mesmo usuário
+    </p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -21,6 +22,7 @@
                             <th>Data Nascimento</th>
                             <th>Sexo</th>
                             <th>Editar</th>
+                            <th>Excluir</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -31,6 +33,7 @@
                             <th>Data Nascimento</th>
                             <th>Sexo</th>
                             <th>Editar</th>
+                            <th>Excluir</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -40,13 +43,47 @@
                             <th>{{item.cpf}}</th>
                             <th>{{item.data_nascimento}}</th>
                             <th>{{item.sexo}}</th>
-                            <th class="th"><button type="button" class="btn btn-warning" (click)="editarUsuairo(item.id)"><i class="fa fa-check"></i></button></th>
+                            <th class="th"><button type="button" class="btn btn-warning"
+                                    (click)="editarUsuairo(item.id)"><i class="fa fa-check"></i></button></th>
+                            <th class="th"><button type="button" class="btn btn-danger  "
+                                    (click)="excluirUsuario(item.id)"><i class="fa fa-check"></i></button></th>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <div id="modal">
+        <button type="button" id="botaoModal" data-toggle="modal" data-target="#modalExclusao">
+        </button>
+    </div>
 
 </div>
 <!-- /.container-fluid -->
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalExclusao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalExclusao">Exclusão de Usuário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span>{{resposta}}</span>
+            </div>
+            <div class="modal-footer">
+                <button *ngIf="confirmacao" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button *ngIf="confirmacao" type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="confirmar()">Confirmar</button>
+                    <button *ngIf="!confirmacao" (click)="concluir()" type="button" class="btn btn-secondary" data-dismiss="modal">Concluir</button>
+            </div>
+        </div>
+    </div>
+</div>

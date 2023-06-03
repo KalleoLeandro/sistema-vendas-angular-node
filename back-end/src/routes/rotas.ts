@@ -15,12 +15,15 @@ router.post('/login', loginController.logar);
 router.post('/validartoken', loginController.validaToken);
 router.post('/userportoken', loginController.userPorToken);
 router.post('/validarformulario', usuarioController.validarFormulario);
-router.post('/cadastrarusuario', usuarioController.cadastrar);
+router.post('/cadastrarusuario', usuarioController.cadastrarUser);
+
 
 //rotas put
+router.put('/atualizarusuario', usuarioController.atualizarUser);
 
 
 //rotas delete
+router.delete('/excluirusuario/:id', usuarioController.excluirUser);    
 
 
 
