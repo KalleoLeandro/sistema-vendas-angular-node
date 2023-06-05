@@ -79,10 +79,9 @@
                 <span>{{resposta}}</span>
             </div>
             <div class="modal-footer">
-                <button *ngIf="confirmacao" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button *ngIf="confirmacao" type="button" class="btn btn-secondary" data-dismiss="modal"
-                    (click)="confirmar()">Confirmar</button>
-                    <button *ngIf="!confirmacao" (click)="concluir()" type="button" class="btn btn-secondary" data-dismiss="modal">Concluir</button>
+                <button *ngIf="confirmacao" type="button" class="btn btn-warning" data-dismiss="modal">Cancelar</button>
+                <button *ngIf="confirmacao" type="button" class="btn btn-danger" data-dismiss="modal" (click)="confirmar()">Confirmar</button>
+                <button *ngIf="!confirmacao" type="button" class="btn btn-info" data-dismiss="modal">Concluir</button>
             </div>
         </div>
     </div>

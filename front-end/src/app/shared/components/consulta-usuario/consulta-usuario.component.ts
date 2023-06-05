@@ -65,14 +65,14 @@ export class ConsultaUsuarioComponent implements OnInit{
   }
 
 
-  public confirmar(){
-    this.confirmacao = false;    
+  public confirmar(){    
+    this.confirmacao = false;
     this.cadastrosService.excluirUsuario(this.userId).subscribe({
-      next: (res) =>{
-        this.resposta = "Usuário excluido com sucesso!";
-        document.getElementById('botaoModal')?.click();      
+      next: (res) =>{        
+        this.resposta = "Usuário excluido com sucesso!";        
       },
       error: (err) =>{
+        this.resposta = "Erro ao excluir usuário!";
         console.log(err);
       }
     });        

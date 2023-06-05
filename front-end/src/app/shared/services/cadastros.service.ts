@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class CadastrosService {
 
-  public url:string = "http://localhost:3000/";
+  private url:string = "http://localhost:3000/";
 
   public httpOptions = {
     headers: new HttpHeaders({
