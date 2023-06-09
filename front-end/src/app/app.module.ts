@@ -16,7 +16,19 @@ import { ConsultasService } from './shared/services/consultas.service';
 import { NgxMaskModule } from 'ngx-mask';
 import { CadastrosService } from './shared/services/cadastros.service';
 import { EditarUsuarioComponent } from './shared/components/editar-usuario/editar-usuario.component';
+import { CadastrarProdutoComponent } from './shared/components/cadastrar-produto/cadastrar-produto.component';
+import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
+import { ConsultaProdutoComponent } from './shared/components/consulta-produto/consulta-produto.component';
 
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "left",
+  allowNegative: true,
+  decimal: ",",
+  precision: 2,
+  prefix: "R$ ",
+  suffix: "",
+  thousands: "."
+};
 
 @NgModule({
   declarations: [
@@ -28,6 +40,8 @@ import { EditarUsuarioComponent } from './shared/components/editar-usuario/edita
     DashboardComponent,
     ErroComponent,
     EditarUsuarioComponent,
+    CadastrarProdutoComponent,    
+    ConsultaProdutoComponent,    
   ],
   imports: [
     BrowserModule,
@@ -37,11 +51,13 @@ import { EditarUsuarioComponent } from './shared/components/editar-usuario/edita
     HttpClientModule,
     NgxMaskModule.forRoot({
       dropSpecialCharacters: false
-    })
+    }),
+    CurrencyMaskModule
   ],
   providers: [LoginService,
     ConsultasService,  
-    CadastrosService
+    CadastrosService,
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],
   bootstrap: [AppComponent]
 })

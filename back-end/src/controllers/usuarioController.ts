@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { ListaUsuariosResponse, UsuarioEditResponse, UsuarioRequest } from '../models/Usuario';
 import { atualizarUsuario, buscarUsuarioPorId, cadastrarUsuario, excluirUsuario, listarUsuarios } from '../services/usuarioServices';
-import { buscarLoginPorId } from '../services/loginServices';
 
 export const validarFormulario = (req: Request, res: Response) => {
     res.status(200).end();

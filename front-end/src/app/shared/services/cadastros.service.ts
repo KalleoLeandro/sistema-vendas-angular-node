@@ -29,4 +29,8 @@ export class CadastrosService {
   public excluirUsuario(id:number):Observable<any>{
     return this.http.delete<string>(`${this.url}excluirusuario/${id}`, this.httpOptions);    
   }
+
+  public cadastrarProduto(formulario:FormGroup):Observable<string>{
+    return this.http.post<string>(`${this.url}cadastrarproduto`, formulario.getRawValue() , this.httpOptions);    
+  }
 }

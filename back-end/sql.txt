@@ -39,3 +39,12 @@ create table usuario (
 alter table usuario add FOREIGN key (endereco_id) REFERENCES endereco(id);
 alter table usuario add FOREIGN key (dados_login_id) REFERENCES dados_login(id);
 alter table usuario add FOREIGN key (contato_id) REFERENCES contato(id);
+
+create table produtos(
+	id int AUTO_INCREMENT PRIMARY key,
+    nome varchar(255) not null,
+    preco double not null,
+    quantidade int not null,
+    medida varchar(50) not null,
+    categoria varchar(50) not null
+);

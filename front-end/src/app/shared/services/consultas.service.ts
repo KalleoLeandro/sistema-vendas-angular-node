@@ -33,4 +33,8 @@ export class ConsultasService {
   public consultaUsuarioPorId(id:number): Observable<any>{
     return this.http.get<any>(`${this.url}listausuarioporid?id=${id}`);
   }
+  
+  public consultaListaProdutos():Observable<any>{
+    return this.http.get<any>(`${this.url}listaprodutos`);
+  }
 }

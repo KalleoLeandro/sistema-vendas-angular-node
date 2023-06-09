@@ -92,8 +92,7 @@ export const retornaLogin = async (token: string): Promise<string> => {
         const decoded: any = await jwt.verify(token, 'random_key');
         const login: any = await buscarLoginPorId(decoded.userId);                    
         return login[0].nome;
-    } catch (err) {
-        console.error(err);
+    } catch (err) {        
         return "";
     }
 }

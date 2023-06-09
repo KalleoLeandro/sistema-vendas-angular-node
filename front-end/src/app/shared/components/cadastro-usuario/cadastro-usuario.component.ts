@@ -170,7 +170,7 @@ export class CadastroUsuarioComponent {
   }
 
   public limparFormulario() {
-    //this.cadastroForm.reset();
+    this.cadastroForm.reset();
     this.cadastroForm.patchValue({
       sexo:'m'
     })
