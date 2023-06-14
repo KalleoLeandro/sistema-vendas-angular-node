@@ -48,7 +48,7 @@ export const excluirUser = async (req: Request, res: Response) =>{
     const id: any = req.params.id;
     const resultado: boolean = await excluirUsuario(id);
     if (resultado) {
-        res.status(200).json("Usuário excluído com sucesso!");
+        res.status(204).json("Usuário excluído com sucesso!");
     } else {
         res.status(500).end();
     }    

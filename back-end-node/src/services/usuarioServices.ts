@@ -164,10 +164,12 @@ export const excluirUsuario = async (id: number) => {
         await promisePool.query(sql, values);               
         await excluirEndereco(usuario[0][0].endereco_id);
         await excluirContato(usuario[0][0].contato_id);
-        await excluirDadosLogin(usuario[0][0].dados_login_id);         
+        await excluirDadosLogin(usuario[0][0].dados_login_id);
+        commit();
         return true;
     }
     catch (err) {
+        rollback();
         console.error(err);
         throw new Error;
     }

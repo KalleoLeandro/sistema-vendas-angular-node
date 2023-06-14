@@ -21,12 +21,27 @@ export const listarProdutos = async  ():Promise<Array<Produto>> => {
     const sql = `select * from produtos`;
     const promisePool = pool.promise();
     try {
-        const [rows]: [Array<Produto>] = await promisePool.query(sql);
-        console.log(rows);
+        const [rows]: [Array<Produto>] = await promisePool.query(sql);        
         return rows;
     } catch (err) {
         console.error(err);
         return [];
+    }
+}
+
+export const excluirProduto = async (id:number)=>{
+    try {        
+        const sql = `delete from produtos where id = ?`
+        const values = [id];
+        const promisePool = pool.promise();
+        await promisePool.query(sql, values);
+        commit();        
+        return true;
+    }
+    catch (err) {
+        rollback();
+        console.error(err);
+        throw new Error;
     }
 }
 

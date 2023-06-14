@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Produto } from '../models/Produto';
-import { cadastrarProduto, listarProdutos } from '../services/produtoService';
+import { cadastrarProduto, excluirProduto, listarProdutos } from '../services/produtoService';
 
 export const cadastrarProdutos = async (req: Request, res: Response) => {
     const produto:Produto = req.body;        
@@ -20,4 +20,15 @@ export const listaProdutos = async (req:Request, res: Response) =>{
     } else {
         res.status(500).end();
     }
+}
+
+export const excluirProduct = async (req:Request, res: Response) =>{
+    const id: any = req.params.id;
+    const resultado: boolean = await excluirProduto(id);
+    if (resultado) {
+        res.status(204).json("Produto excluído com sucesso!");
+    } else {
+        res.status(500).end();
+    }    
+   res.status(500).json();
 }

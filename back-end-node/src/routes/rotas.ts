@@ -27,6 +27,7 @@ router.put('/atualizarusuario', usuarioController.atualizarUser);
 
 //rotas delete
 router.delete('/excluirusuario/:id', usuarioController.excluirUser);    
+router.delete('/excluirproduto/:id', produtoController.excluirProduct);
 
 
 

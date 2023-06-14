@@ -42,15 +42,15 @@
                     </tfoot>
                     <tbody>
                         <tr *ngFor="let item of lista; let i = index">
-                            <th>{{item.id}}</th>
-                            <th>{{item.nome}}</th>
-                            <th>R$ {{item.preco_custo}}</th>
-                            <th>R$ {{item.preco_venda}}</th>
-                            <th>{{item.medida}}</th>
-                            <th>{{item.quantidade}}</th>
-                            <th>{{item.categoria}}</th>
-                            <th class="th"><button type="button" class="btn btn-warning"><i class="fa fa-check"></i></button></th>
-                            <th class="th"><button type="button" class="btn btn-danger"><i class="fa fa-check"></i></button></th>
+                            <th>{{ item.id }}</th>
+                            <th>{{ item.nome }}</th>
+                            <th>R$ {{ formatarValor(item.preco_custo) }}</th>
+                            <th>R$ {{ formatarValor(item.preco_venda) }}</th>
+                            <th>{{ item.medida }}</th>
+                            <th>{{ item.quantidade }}</th>
+                            <th>{{ item.categoria }}</th>
+                            <th class="th"><button type="button" class="btn btn-warning" (click)="editarProduto(item.id)"><i class="fa fa-check"></i></button></th>
+                            <th class="th"><button type="button" class="btn btn-danger" (click)="excluirProduto(item.id)"><i class="fa fa-check"></i></button></th>
                         </tr>
                     </tbody>
                 </table>
@@ -84,7 +84,7 @@
             </div>
             <div class="modal-footer">
                 <button *ngIf="confirmacao" type="button" class="btn btn-warning" data-dismiss="modal">Cancelar</button>
-                <button *ngIf="confirmacao" type="button" class="btn btn-danger" data-dismiss="modal">Confirmar</button>
+                <button *ngIf="confirmacao" type="button" class="btn btn-danger" data-dismiss="modal" (click)="confirmar()">Confirmar</button>
                 <button *ngIf="!confirmacao" type="button" class="btn btn-info" data-dismiss="modal">Concluir</button>
             </div>
         </div>

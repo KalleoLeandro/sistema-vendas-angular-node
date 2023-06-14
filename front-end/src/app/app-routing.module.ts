@@ -9,6 +9,7 @@ import { ErroComponent } from './shared/components/erro/erro.component';
 import { EditarUsuarioComponent } from './shared/components/editar-usuario/editar-usuario.component';
 import { CadastrarProdutoComponent } from './shared/components/cadastrar-produto/cadastrar-produto.component';
 import { ConsultaProdutoComponent } from './shared/components/consulta-produto/consulta-produto.component';
+import { EditarProdutoComponent } from './shared/components/editar-produto/editar-produto.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -18,8 +19,8 @@ const routes: Routes = [
     { path: 'cadastrarusuarios', component: CadastroUsuarioComponent},
     { path: 'editarusuario/:id', component: EditarUsuarioComponent},
     { path: 'cadastrarprodutos', component: CadastrarProdutoComponent},
-    { path: 'listarprodutos', component: ConsultaProdutoComponent}],  
-    
+    { path: 'listarprodutos', component: ConsultaProdutoComponent},
+    { path: 'editarpeduto/:id', component: EditarProdutoComponent}]    
   },
   { path: '404', component: ErroComponent},
   {path: '**', component: ErroComponent}

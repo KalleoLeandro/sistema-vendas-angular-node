@@ -19,6 +19,9 @@ import { EditarUsuarioComponent } from './shared/components/editar-usuario/edita
 import { CadastrarProdutoComponent } from './shared/components/cadastrar-produto/cadastrar-produto.component';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
 import { ConsultaProdutoComponent } from './shared/components/consulta-produto/consulta-produto.component';
+import { DecimalPipe } from '@angular/common';
+import { CustomNumberPipe } from './shared/pipe/custom-number.pipe';
+import { EditarProdutoComponent } from './shared/components/editar-produto/editar-produto.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
@@ -41,7 +44,9 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     ErroComponent,
     EditarUsuarioComponent,
     CadastrarProdutoComponent,    
-    ConsultaProdutoComponent,    
+    ConsultaProdutoComponent,
+    CustomNumberPipe,
+    EditarProdutoComponent   
   ],
   imports: [
     BrowserModule,
@@ -54,10 +59,14 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     }),
     CurrencyMaskModule
   ],
+  exports:[
+    CustomNumberPipe
+  ],
   providers: [LoginService,
     ConsultasService,  
     CadastrosService,
-    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
+    DecimalPipe
   ],
   bootstrap: [AppComponent]
 })

@@ -33,4 +33,8 @@ export class CadastrosService {
   public cadastrarProduto(formulario:FormGroup):Observable<string>{
     return this.http.post<string>(`${this.url}cadastrarproduto`, formulario.getRawValue() , this.httpOptions);    
   }
+
+  public excluirProduto(id:number):Observable<any>{
+    return this.http.delete<string>(`${this.url}excluirproduto/${id}`, this.httpOptions);    
+  }
 }
