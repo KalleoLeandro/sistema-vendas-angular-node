@@ -1,9 +1,9 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { LoginService } from '../../services/login.service';
-import { ConsultasService } from '../../services/consultas.service';
 import { Router } from '@angular/router';
-import { ListaUsuariosResponse } from '../../models/User';
-import { CadastrosService } from '../../services/cadastros.service';
+import { Usuario } from 'src/app/shared/models/Usuario';
+import { CadastrosService } from 'src/app/shared/services/cadastros.service';
+import { ConsultasService } from 'src/app/shared/services/consultas.service';
+import { LoginService } from 'src/app/shared/services/login.service';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { CadastrosService } from '../../services/cadastros.service';
 export class ConsultaUsuarioComponent implements OnInit{
   
   public token = localStorage.getItem('authorization');
-  public lista:Array<ListaUsuariosResponse> = [];  
+  public lista:Array<Usuario> = [];  
   public resposta:string = "";
   public confirmacao:boolean = true;
   public userId:number=0;
@@ -39,8 +39,8 @@ export class ConsultaUsuarioComponent implements OnInit{
     this.consultaService.consultaListaUsuarios().subscribe({
       next: (res) => {   
         this.lista = res;
-        const listaFormatada: Array<ListaUsuariosResponse> = this.lista.map(x => {
-          const novoObjeto: ListaUsuariosResponse = {
+        const listaFormatada: Array<Usuario> = this.lista.map(x => {
+          const novoObjeto: Usuario = {
             id: x.id,
             nome: x.nome, 
             cpf: x.cpf,
@@ -69,7 +69,7 @@ export class ConsultaUsuarioComponent implements OnInit{
     this.confirmacao = false;
     this.cadastrosService.excluirUsuario(this.userId).subscribe({
       next: (res) =>{        
-        this.resposta = "Usuário excluido com sucesso!";        
+        this.resposta = "Usuário excluido com sucesso!";    
       },
       error: (err) =>{
         this.resposta = "Erro ao excluir usuário!";
@@ -79,7 +79,7 @@ export class ConsultaUsuarioComponent implements OnInit{
   }
 
   public concluir(){    
-    //window.location.reload();
+    window.location.reload();
   }
 
   public editarUsuairo(id:number){        

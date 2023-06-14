@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginService } from '../../services/login.service';
-import { ConsultasService } from '../../services/consultas.service';
-import { CadastrosService } from '../../services/cadastros.service';
+import { LoginService } from '../../../services/login.service';
+import { ConsultasService } from '../../../services/consultas.service';
+import { CadastrosService } from '../../../services/cadastros.service';
 import { Router } from '@angular/router';
 
 @Component({

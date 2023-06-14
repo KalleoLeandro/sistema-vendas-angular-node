@@ -2,8 +2,8 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Lista de Produtos</h1>
-    <p class="mb-4">Clique em editar para editar o produto em questão, cliquem em excluir para excluir o mesmo produto
+    <h1 class="h3 mb-2 text-gray-800">Lista de Usuários</h1>
+    <p class="mb-4">Clique em editar para editar o usuário em questão, cliquem em excluir para excluir o mesmo usuário
     </p>
 
     <!-- DataTales Example -->
@@ -18,39 +18,35 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Preço Custo</th>
-                            <th>Preço Venda</th>
-                            <th>Medida</th>
-                            <th>Quantidade</th>
-                            <th>Categoria</th>  
+                            <th>CPF</th>
+                            <th>Data Nascimento</th>
+                            <th>Sexo</th>
                             <th>Editar</th>
-                            <th>Excluir</th>                          
+                            <th>Excluir</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Preço Custo</th>
-                            <th>Preço Venda</th>
-                            <th>Medida</th>
-                            <th>Quantidade</th>
-                            <th>Categoria</th>  
+                            <th>CPF</th>
+                            <th>Data Nascimento</th>
+                            <th>Sexo</th>
                             <th>Editar</th>
-                            <th>Excluir</th> 
+                            <th>Excluir</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <tr *ngFor="let item of lista; let i = index">
-                            <th>{{ item.id }}</th>
-                            <th>{{ item.nome }}</th>
-                            <th>R$ {{ formatarValor(item.preco_custo) }}</th>
-                            <th>R$ {{ formatarValor(item.preco_venda) }}</th>
-                            <th>{{ item.medida }}</th>
-                            <th>{{ item.quantidade }}</th>
-                            <th>{{ item.categoria }}</th>
-                            <th class="th"><button type="button" class="btn btn-warning" (click)="editarProduto(item.id)"><i class="fa fa-check"></i></button></th>
-                            <th class="th"><button type="button" class="btn btn-danger" (click)="excluirProduto(item.id)"><i class="fa fa-check"></i></button></th>
+                            <th>{{item.id}}</th>
+                            <th>{{item.nome}}</th>
+                            <th>{{item.cpf}}</th>
+                            <th>{{item.data_nascimento}}</th>
+                            <th>{{item.sexo}}</th>
+                            <th class="th"><button type="button" class="btn btn-warning"
+                                    (click)="editarUsuairo(item.id)"><i class="fa fa-check"></i></button></th>
+                            <th class="th"><button type="button" class="btn btn-danger  "
+                                    (click)="excluirUsuario(item.id)"><i class="fa fa-check"></i></button></th>
                         </tr>
                     </tbody>
                 </table>
@@ -74,7 +70,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalExclusao">Exclusão de Produtos</h5>
+                <h5 class="modal-title" id="modalExclusao">Exclusão de Usuário</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -85,7 +81,7 @@
             <div class="modal-footer">
                 <button *ngIf="confirmacao" type="button" class="btn btn-warning" data-dismiss="modal">Cancelar</button>
                 <button *ngIf="confirmacao" type="button" class="btn btn-danger" data-dismiss="modal" (click)="confirmar()">Confirmar</button>
-                <button *ngIf="!confirmacao" type="button" class="btn btn-info" data-dismiss="modal">Concluir</button>
+                <button *ngIf="!confirmacao" type="button" class="btn btn-info" data-dismiss="modal" (click)="concluir()">Concluir</button>
             </div>
         </div>
     </div>

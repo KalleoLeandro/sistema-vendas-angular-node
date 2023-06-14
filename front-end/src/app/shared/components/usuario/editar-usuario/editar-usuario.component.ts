@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ConsultasService } from '../../services/consultas.service';
+import { ConsultasService } from '../../../services/consultas.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
-import { CadastrosService } from '../../services/cadastros.service';
+import { LoginService } from '../../../services/login.service';
+import { CadastrosService } from '../../../services/cadastros.service';
 import { first } from 'rxjs';
 import { formatDate } from '@angular/common';
 
@@ -200,6 +200,7 @@ export class EditarUsuarioComponent implements OnInit {
       this.consultaService.validarDados(this.editForm).subscribe({
         next: (res) => {
           this.cadastrosService.atualizarUsuario(this.editForm).pipe(first()).subscribe(()=>{
+            this.resposta = `Usuário atualizado com sucesso!`;
             document.getElementById("botaoModal")?.click();
           });                    
         },

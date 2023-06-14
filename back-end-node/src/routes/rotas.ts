@@ -11,6 +11,7 @@ const router = Router();
 router.get('/listausuarios', usuarioController.listaUsuarios);
 router.get('/listausuarioporid', usuarioController.listarUsuarioPorId);
 router.get('/listaprodutos', produtoController.listaProdutos);
+router.get('/listaprodutoporid', produtoController.listarProductPorId);
 
 //rotas post
 router.post('/login', loginController.logar);

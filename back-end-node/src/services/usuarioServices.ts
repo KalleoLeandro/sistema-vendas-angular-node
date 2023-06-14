@@ -1,7 +1,7 @@
 const pool = require('../db/conn');
-import { ListaUsuariosResponse, UsuarioEditResponse, UsuarioRequest } from '../models/Usuario';
+import { Usuario } from '../models/Usuario';
 
-export const cadastrarUsuario = async (usuario: UsuarioRequest): Promise<boolean> => {
+export const cadastrarUsuario = async (usuario: Usuario): Promise<boolean> => {
     let teste: boolean = true;
     let endereco_id: number = await cadastrarEndereco(usuario, teste);
     let contato_id: number = await cadastrarContato(usuario, teste);
@@ -15,9 +15,9 @@ export const cadastrarUsuario = async (usuario: UsuarioRequest): Promise<boolean
     return teste;
 }
 
-export const cadastrarEndereco = async (usuario: UsuarioRequest, teste: boolean) => {
-    const sql_endereco = `insert into endereco (rua, numero, complemento, bairro, cidade, uf) values(?,?,?,?,?,?)`;
-    const values = [usuario.rua, usuario.numero, usuario.complemento, usuario.bairro, usuario.cidade, usuario.uf];
+export const cadastrarEndereco = async (usuario: Usuario, teste: boolean) => {
+    const sql_endereco = `insert into endereco (cep, rua, numero, complemento, bairro, cidade, uf) values(?,?,?,?,?,?,?)`;
+    const values = [usuario.cep, usuario.rua, usuario.numero, usuario.complemento, usuario.bairro, usuario.cidade, usuario.uf];
     const promisePool = pool.promise();
     let valor: Array<any> = await promisePool.query(sql_endereco, values, (err: Error, data: any) => {
         if (err) {
@@ -27,7 +27,7 @@ export const cadastrarEndereco = async (usuario: UsuarioRequest, teste: boolean)
     return valor[0].insertId as number;
 }
 
-export const cadastrarContato = async (usuario: UsuarioRequest, teste: boolean) => {
+export const cadastrarContato = async (usuario: Usuario, teste: boolean) => {
     const sql_contato = `insert into contato (telefone, celular, email) values(?,?,?)`;
     const values = [usuario.telefone, usuario.celular, usuario.email];
     const promisePool = pool.promise();
@@ -39,7 +39,7 @@ export const cadastrarContato = async (usuario: UsuarioRequest, teste: boolean) 
     return valor[0].insertId as number;
 }
 
-export const cadastrarLogin = async (usuario: UsuarioRequest, teste: boolean) => {
+export const cadastrarLogin = async (usuario: Usuario, teste: boolean) => {
     const sql_login = `insert into dados_login (login, senha, perfil) values(?,?,?)`;
     const values = [usuario.login, usuario.senha, usuario.perfil];
     const promisePool = pool.promise();
@@ -51,7 +51,7 @@ export const cadastrarLogin = async (usuario: UsuarioRequest, teste: boolean) =>
     return valor[0].insertId as number;
 }
 
-export const cadastrarDadosPessoais = async (usuario: UsuarioRequest, teste: boolean, endereco_id: number, contato_id: number, dados_login_id: number) => {
+export const cadastrarDadosPessoais = async (usuario: Usuario, teste: boolean, endereco_id: number, contato_id: number, dados_login_id: number) => {
     const sql_usuario = `insert into usuario (nome, cpf, sexo, data_nascimento, endereco_id, dados_login_id, contato_id) values(?,?,?,?,?,?,?)`;
     const values = [usuario.nome, usuario.cpf, usuario.sexo, usuario.dataNascimento, endereco_id, dados_login_id, contato_id];
     const promisePool = pool.promise();
@@ -62,11 +62,11 @@ export const cadastrarDadosPessoais = async (usuario: UsuarioRequest, teste: boo
     });
 }
 
-export const listarUsuarios = async (): Promise<Array<ListaUsuariosResponse>> => {
+export const listarUsuarios = async (): Promise<Array<Usuario>> => {
     const sql = `select * from usuario where id not in(1)`;
     const promisePool = pool.promise();
     try {
-        const [rows]: [Array<ListaUsuariosResponse>] = await promisePool.query(sql);
+        const [rows]: [Array<Usuario>] = await promisePool.query(sql);
         return rows;
     } catch (err) {
         console.error(err);
@@ -74,7 +74,7 @@ export const listarUsuarios = async (): Promise<Array<ListaUsuariosResponse>> =>
     }
 }
 
-export const atualizarUsuario = async (userEdit: UsuarioEditResponse) => {
+export const atualizarUsuario = async (userEdit: Usuario) => {
     if (userEdit.id === 1) {
         return false;
     }
@@ -96,7 +96,7 @@ export const atualizarUsuario = async (userEdit: UsuarioEditResponse) => {
     return true;
 }
 
-export const atualizarEndereco = async (userEdit: UsuarioEditResponse) => {
+export const atualizarEndereco = async (userEdit: Usuario) => {
     const sql = `update endereco set cep = ?, rua = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, uf = ? where id = ?`;
     const values = [userEdit.cep, userEdit.rua, userEdit.numero, userEdit.complemento, userEdit.bairro, userEdit.cidade, userEdit.uf, userEdit.endereco_id];
     const promisePool = pool.promise();
@@ -108,7 +108,7 @@ export const atualizarEndereco = async (userEdit: UsuarioEditResponse) => {
     });
 }
 
-export const atualizarContato = async (userEdit: UsuarioEditResponse) => {
+export const atualizarContato = async (userEdit: Usuario) => {
     const sql = `update contato set telefone = ?, celular = ?, email = ? where id = ?`
     const values = [userEdit.telefone, userEdit.celular, userEdit.email, userEdit.contato_id];
     const promisePool = pool.promise();
@@ -120,7 +120,7 @@ export const atualizarContato = async (userEdit: UsuarioEditResponse) => {
     });
 }
 
-export const atualizarDadosLogin = async (userEdit: UsuarioEditResponse) => {
+export const atualizarDadosLogin = async (userEdit: Usuario) => {
     const sql = `update dados_login set login = ?, senha = ?, perfil = ? where id = ?`;
     const values = [userEdit.login, userEdit.senha, userEdit.perfil, userEdit.dados_login_id];
     const promisePool = pool.promise();
@@ -132,10 +132,10 @@ export const atualizarDadosLogin = async (userEdit: UsuarioEditResponse) => {
     });
 }
 
-export const buscarUsuarioPorId = async (id: any): Promise<UsuarioEditResponse> => {
+export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
     const sql = `select usuario.id, usuario.nome, usuario.cpf, usuario.data_nascimento, usuario.sexo, usuario.dados_login_id, usuario.endereco_id, usuario.contato_id,
     contato.telefone, contato.celular, contato.email,
-    endereco.cep, endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, endereco.uf,
+    endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, endereco.uf, endereco.cep, 
     dados_login.login, dados_login.perfil
     from usuario inner join contato inner join endereco inner join dados_login 
     on contato.id = usuario.contato_id AND
@@ -146,7 +146,7 @@ export const buscarUsuarioPorId = async (id: any): Promise<UsuarioEditResponse> 
     const values = [id];
     const promisePool = pool.promise();
     try {
-        const user: UsuarioEditResponse = await promisePool.query(sql, values);
+        const user: Usuario = await promisePool.query(sql, values);                
         return user;
     } catch (err) {
         console.error(err);

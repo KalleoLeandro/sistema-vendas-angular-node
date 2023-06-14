@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginService } from '../../services/login.service';
+import { LoginService } from '../../../services/login.service';
 import { Router } from '@angular/router';
-import { ConsultasService } from '../../services/consultas.service';
-import { CadastrosService } from '../../services/cadastros.service';
+import { ConsultasService } from '../../../services/consultas.service';
+import { CadastrosService } from '../../../services/cadastros.service';
 
 @Component({
   selector: 'app-cadastro',

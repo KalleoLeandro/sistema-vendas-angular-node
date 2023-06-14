@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
-import { ListaProdutosResponse } from '../../models/Produto';
-import { ConsultasService } from '../../services/consultas.service';
-import { DecimalPipe } from '@angular/common';
-import { CustomNumberPipe } from '../../pipe/custom-number.pipe';
-import { CadastrosService } from '../../services/cadastros.service';
+import { ListaProdutosResponse } from 'src/app/shared/models/Produto';
+import { CadastrosService } from 'src/app/shared/services/cadastros.service';
+import { ConsultasService } from 'src/app/shared/services/consultas.service';
+import { LoginService } from 'src/app/shared/services/login.service';
+
 
 @Component({
   selector: 'app-consulta-produto',
@@ -61,17 +60,17 @@ export class ConsultaProdutoComponent implements OnInit {
   }
 
   public formatarValor(valor: number): string {
-    return `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    return `${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
   }
 
   public editarProduto(id:number){
-    console.log('Editar');
+    this.router.navigate([`./sistema/editarproduto/${id}`]); 
   }
 
   public excluirProduto(id:number){
     this.confirmacao = true;
     this.productId = id;
-    this.resposta = "Tem certeza que deseja excluir esse usuário?";    
+    this.resposta = "Tem certeza que deseja excluir esse produto?";    
     document.getElementById('botaoModal')?.click();
   }
 
@@ -79,12 +78,16 @@ export class ConsultaProdutoComponent implements OnInit {
     this.confirmacao = false;
     this.cadastrosService.excluirProduto(this.productId).subscribe({
       next: (res) =>{        
-        this.resposta = "Usuário excluido com sucesso!";
+        this.resposta = "Produto excluido com sucesso!";
       },
       error: (err) =>{
-        this.resposta = "Erro ao excluir usuário!";
+        this.resposta = "Erro ao excluir produto!";
         console.log(err);
       }
     });        
+  }
+  
+  public concluir(){    
+    window.location.reload();
   }
 }

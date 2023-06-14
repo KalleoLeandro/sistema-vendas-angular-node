@@ -6,8 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import { MainComponent } from './shared/components/main/main.component';
-import { CadastroUsuarioComponent } from './shared/components/cadastro-usuario/cadastro-usuario.component';
-import { ConsultaUsuarioComponent } from './shared/components/consulta-usuario/consulta-usuario.component';
+import { CadastroUsuarioComponent } from './shared/components/usuario/cadastro-usuario/cadastro-usuario.component';
+
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { ErroComponent } from './shared/components/erro/erro.component';
 import { LoginService } from './shared/services/login.service';
@@ -15,13 +15,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConsultasService } from './shared/services/consultas.service';
 import { NgxMaskModule } from 'ngx-mask';
 import { CadastrosService } from './shared/services/cadastros.service';
-import { EditarUsuarioComponent } from './shared/components/editar-usuario/editar-usuario.component';
-import { CadastrarProdutoComponent } from './shared/components/cadastrar-produto/cadastrar-produto.component';
+import { EditarUsuarioComponent } from './shared/components/usuario/editar-usuario/editar-usuario.component';
+import { CadastrarProdutoComponent } from './shared/components/produto/cadastrar-produto/cadastrar-produto.component';
 import { CURRENCY_MASK_CONFIG, CurrencyMaskConfig, CurrencyMaskModule } from 'ng2-currency-mask';
-import { ConsultaProdutoComponent } from './shared/components/consulta-produto/consulta-produto.component';
+
 import { DecimalPipe } from '@angular/common';
 import { CustomNumberPipe } from './shared/pipe/custom-number.pipe';
-import { EditarProdutoComponent } from './shared/components/editar-produto/editar-produto.component';
+import { ConsultaUsuarioComponent } from './shared/components/usuario/consulta-usuario/consulta-usuario.component';
+import { ConsultaProdutoComponent } from './shared/components/produto/consulta-produto/consulta-produto.component';
+import { EditarProdutoComponent } from './shared/components/produto/editar-produto/editar-produto.component';
+
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "left",
