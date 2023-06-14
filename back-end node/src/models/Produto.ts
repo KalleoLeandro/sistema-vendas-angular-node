@@ -1,6 +1,8 @@
 export interface Produto {
+    id?:number,
     nome:string,
-    preco: number,
+    precoCusto: number,
+    precoVenda: number,
     quantidade: number,
     medida: string,
     categoria: string

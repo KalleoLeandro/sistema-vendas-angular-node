@@ -37,18 +37,19 @@ export class ConsultaProdutoComponent implements OnInit{
     this.consultaService.consultaListaProdutos().subscribe({
       next: (res) => {   
         this.lista = res;
-        const listaFormatada: Array<ListaProdutosResponse> = this.lista.map(x => {
+        const listaFormatada: Array<ListaProdutosResponse> = this.lista.map(x => {          
           const novoObjeto: ListaProdutosResponse = {
             id: x.id,
             nome: x.nome, 
-            preco: x.preco,
+            preco_custo: x.preco_custo,
+            preco_venda: x.preco_venda,
             quantidade: x.quantidade,
             medida: x.medida,
             categoria: x.categoria
-          };
+          };          
           return novoObjeto;
         });        
-       this.lista = listaFormatada;
+       this.lista = listaFormatada;       
       },
       error: (err) => {
         console.log(err);        

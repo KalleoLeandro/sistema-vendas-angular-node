@@ -18,7 +18,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Preço Base</th>
+                            <th>Preço Custo</th>
+                            <th>Preço Venda</th>
                             <th>Medida</th>
                             <th>Quantidade</th>
                             <th>Categoria</th>  
@@ -30,7 +31,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Preço Base</th>
+                            <th>Preço Custo</th>
+                            <th>Preço Venda</th>
                             <th>Medida</th>
                             <th>Quantidade</th>
                             <th>Categoria</th>  
@@ -42,7 +44,8 @@
                         <tr *ngFor="let item of lista; let i = index">
                             <th>{{item.id}}</th>
                             <th>{{item.nome}}</th>
-                            <th>{{item.preco}}</th>
+                            <th>R$ {{item.preco_custo}}</th>
+                            <th>R$ {{item.preco_venda}}</th>
                             <th>{{item.medida}}</th>
                             <th>{{item.quantidade}}</th>
                             <th>{{item.categoria}}</th>

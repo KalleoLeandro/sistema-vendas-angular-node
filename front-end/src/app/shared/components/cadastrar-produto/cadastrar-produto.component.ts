@@ -36,7 +36,8 @@ export class CadastrarProdutoComponent {
 
   public cadastroForm: FormGroup = this.formBuilder.group({
     nome: ['', Validators.required],
-    preco: ['', Validators.required],
+    precoCusto: ['', Validators.required],
+    precoVenda: ['', Validators.required],
     quantidade: ['', Validators.compose([Validators.required, Validators.min(1)])],
     medida: ['', Validators.required],
     categoria: ['', Validators.required]
