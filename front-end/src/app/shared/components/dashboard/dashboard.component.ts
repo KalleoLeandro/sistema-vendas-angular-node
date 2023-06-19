@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   public data = {
     labels: this.labels,
     datasets: [{
-      label: 'Valores dos contratos por mês',
+      label: 'Valores das vendas por mês',
       data: [65, 59, 80, 81, 56, 55, 40],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',

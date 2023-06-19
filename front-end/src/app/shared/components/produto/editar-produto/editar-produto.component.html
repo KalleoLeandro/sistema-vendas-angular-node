@@ -8,7 +8,10 @@
             <h6 class="m-0 font-weight-bold text-primary">Dados do Produto</h6>
         </div>
         <div class="col-12">
-            <form [formGroup]="cadastroForm" (ngSubmit)="submitForm()">
+            <form [formGroup]="editForm" (ngSubmit)="submitForm()">
+                <div class="form-group">
+                    <input type="hidden" formControlName="id" name="id">
+                </div>
                 <div class="form-group">
                     <label>
                         Nome
@@ -19,13 +22,15 @@
                     <label>
                         Preço de Custo
                     </label>
-                    <input currencyMask formControlName="precoCusto" class="form-control" name="precoCusto">                                        
+                    <input currencyMask formControlName="precoCusto" class="form-control" name="precoCusto">        
+                    <small>*Para editar o produto é obrigatório realizar nova inserção de preços de custo</small>                                
                 </div>
                 <div class="form-group">
                     <label>
                         Preço de Venda
                     </label>
-                    <input currencyMask formControlName="precoVenda" class="form-control" name="precoVenda">                                        
+                    <input currencyMask formControlName="precoVenda" class="form-control" name="precoVenda">                                     
+                    <small>*Para editar o produto é obrigatório realizar nova inserção de preço de venda</small>                                   
                 </div>
                 <div class="form-group">
                     <label>
@@ -42,7 +47,7 @@
                     <option *ngFor="let item of categoria; let i = index" [value]="item">{{item}}</option>
                 </select>
                 <div class="botoes mt-5 mb-3">                    
-                    <button class="btn btn-primary" [disabled]="cadastroForm.invalid">Cadastrar</button>                    
+                    <button class="btn btn-primary" [disabled]="editForm.invalid">Cadastrar</button>                    
                 </div>    
                 <div id="modal">
                     <button type="button" id="botaoModal" data-toggle="modal" data-target="#modalConfirmacao">                        

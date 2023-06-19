@@ -40,8 +40,14 @@ export class EditarProdutoComponent implements OnInit{
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.consultaService.consultaProdutoPorId(this.id).pipe(first()).subscribe({
       next: (res) => {
-        this.dados = res[0][0];
-        console.log(this.dados);
+        this.dados = res[0][0];        
+        this.editForm.patchValue({
+          id: this.dados.id,
+          nome: this.dados.nome,          
+          quantidade: this.dados.quantidade,
+          medida: this.dados.medida,
+          categoria: this.dados.categoria,
+        });                
       },
       error: (err)=>{
         console.log(err);
@@ -49,7 +55,7 @@ export class EditarProdutoComponent implements OnInit{
     });
   }
 
-  public cadastroForm: FormGroup = this.formBuilder.group({
+  public editForm: FormGroup = this.formBuilder.group({
     id: ['', Validators.required],
     nome: ['', Validators.required],
     precoCusto: ['', Validators.required],
@@ -60,14 +66,11 @@ export class EditarProdutoComponent implements OnInit{
   });
 
   public async submitForm() {        
-    if (this.cadastroForm.valid) {        
+    if (this.editForm.valid) {        
       console.log('Editar');
       //this.cadastroForm.reset();
     } else {
       console.error("Valores inválidos no formulário");
     }
   }
-
-
-
 }

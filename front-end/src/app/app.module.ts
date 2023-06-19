@@ -24,6 +24,7 @@ import { CustomNumberPipe } from './shared/pipe/custom-number.pipe';
 import { ConsultaUsuarioComponent } from './shared/components/usuario/consulta-usuario/consulta-usuario.component';
 import { ConsultaProdutoComponent } from './shared/components/produto/consulta-produto/consulta-produto.component';
 import { EditarProdutoComponent } from './shared/components/produto/editar-produto/editar-produto.component';
+import { EfetuarVendaComponent } from './shared/components/vendas/efetuar-venda/efetuar-venda.component';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -49,7 +50,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CadastrarProdutoComponent,    
     ConsultaProdutoComponent,
     CustomNumberPipe,
-    EditarProdutoComponent   
+    EditarProdutoComponent,
+    EfetuarVendaComponent   
   ],
   imports: [
     BrowserModule,
