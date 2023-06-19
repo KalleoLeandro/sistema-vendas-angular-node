@@ -2,6 +2,7 @@ create database sistema_gerencial;
 
 create table endereco(
 	id int PRIMARY key AUTO_INCREMENT,
+    cep varchar(12) not null,
     rua varchar(255) not null,
     numero int not null,
     complemento varchar(255),
