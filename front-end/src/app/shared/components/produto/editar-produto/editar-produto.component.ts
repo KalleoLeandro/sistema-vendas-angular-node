@@ -40,7 +40,7 @@ export class EditarProdutoComponent implements OnInit{
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.consultaService.consultaProdutoPorId(this.id).pipe(first()).subscribe({
       next: (res) => {
-        this.dados = res[0][0];        
+        this.dados = res;        
         this.editForm.patchValue({
           id: this.dados.id,
           nome: this.dados.nome,          

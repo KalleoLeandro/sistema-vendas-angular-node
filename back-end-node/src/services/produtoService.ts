@@ -34,11 +34,25 @@ export const buscarProdutoPorId = async (id:number): Promise<Produto> =>{
     const values = [id];
     const promisePool = pool.promise();
     try {
-        const produto: Produto = await promisePool.query(sql, values);
-        return produto;
+        const produto: any = await promisePool.query(sql, values);
+        return produto[0][0];
     } catch (err) {
         console.error(err);
         throw new Error;
+    }
+}
+
+export const buscarProdutosPorNome = async(nome:string):Promise<Array<Produto>> =>{
+    const sql = `select * from produtos where nome like ?`;
+    const parametro = nome + '%';
+    const values = [parametro];
+    const promisePool = pool.promise();
+    try {
+        const [rows]: [Array<Produto>] = await promisePool.query(sql, values);        
+        return rows;
+    } catch (err) {
+        console.error(err);
+        return [];
     }
 }
 
@@ -68,6 +82,67 @@ export const excluirProduto = async (id:number)=>{
         return true;
     }
     catch (err) {
+        rollback();
+        console.error(err);
+        throw new Error;
+    }
+}
+
+export const atualizarAdicaoProdutos = async(produtos:Array<any>)=>{
+    let produtosAAlterar:any [] = [];
+    await Promise.all(produtos.map(async (produto: any) => {
+        let elemento: any = await buscarProdutoPorId(produto.id);
+        elemento.quantidade +=  produto.quantidade;        
+        produtosAAlterar.push(elemento);
+    }));    
+    try{
+        await Promise.all(produtosAAlterar.map(async (produto: any) => {
+            const produtoAAlterar:Produto = {
+                id: produto.id,
+                nome: produto.nome,
+                precoCusto: produto.preco_custo,
+                precoVenda: produto.preco_venda,
+                quantidade: produto.quantidade,
+                medida: produto.medida,
+                categoria: produto.categoria
+            }            
+            await atualizarProduto(produtoAAlterar);
+        }));
+        commit();
+        return true;
+    }catch(err){
+        rollback();
+        console.error(err);
+        throw new Error;
+    }
+}
+
+export const atualizarRemocaoProdutos = async(produtos:Array<any>)=>{
+    let produtosAAlterar:any [] = [];
+    await Promise.all(produtos.map(async (produto: any) => {
+        let elemento: any = await buscarProdutoPorId(produto.id);              
+        elemento.quantidade -=  produto.quantidade;
+        if(elemento.quantidade < 0){
+            return false;
+        }
+        produtosAAlterar.push(elemento);
+    }));      
+    try{
+        await Promise.all(produtosAAlterar.map(async (produto: any) => {
+            const produtoAAlterar:Produto = {
+                id: produto.id,
+                nome: produto.nome,
+                precoCusto: produto.preco_custo,
+                precoVenda: produto.preco_venda,
+                quantidade: produto.quantidade,
+                medida: produto.medida,
+                categoria: produto.categoria
+            }
+            await atualizarProduto(produtoAAlterar);
+        }));
+        commit();
+        return true;
+    }catch(err){
         rollback();
         console.error(err);
         throw new Error;

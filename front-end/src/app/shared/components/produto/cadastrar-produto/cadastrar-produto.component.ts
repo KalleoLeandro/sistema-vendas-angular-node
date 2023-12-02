@@ -46,7 +46,7 @@ export class CadastrarProdutoComponent {
   public async submitForm() {        
     if (this.cadastroForm.valid) {        
       this.cadastrarProduto();      
-      this.cadastroForm.reset();
+      this.cadastroForm.reset();      
     } else {
       console.error("Valores inválidos no formulário");
     }

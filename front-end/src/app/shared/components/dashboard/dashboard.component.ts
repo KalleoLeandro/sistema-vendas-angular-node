@@ -9,6 +9,7 @@ import Chart from 'chart.js/auto';
 export class DashboardComponent implements OnInit {
   public chart: any;
   public chart2: any;  
+  public nomeProduto:string= 'Teste';
 
   constructor() {
 
@@ -66,7 +67,7 @@ export class DashboardComponent implements OnInit {
       'Funenário'
     ],
     datasets: [{
-      label: 'Tipos de Contratos',
+      label: 'Quantidade de Produtos no Estoque por Tipo',
       data: [300, 50, 100],
       backgroundColor: [
         'rgb(255, 99, 132)',

@@ -35,4 +35,9 @@ export class MainComponent{
       });
     }   
   }
+
+  public logout(){    
+    localStorage.removeItem("authorization");
+    this.router.navigate(['/']);
+  }
 }

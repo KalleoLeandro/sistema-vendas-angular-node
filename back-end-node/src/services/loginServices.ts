@@ -97,4 +97,14 @@ export const retornaLogin = async (token: string): Promise<string> => {
     }
 }
 
+export const retornaIdLogin = async (token: string): Promise<string> => {
+    try {
+        const decoded: any = await jwt.verify(token, 'random_key');
+        const login: any = await buscarLoginPorId(decoded.userId);                    
+        return login[0].id;
+    } catch (err) {        
+        return "";
+    }
+}
+
 

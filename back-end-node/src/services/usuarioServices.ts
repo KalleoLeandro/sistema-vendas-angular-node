@@ -146,8 +146,8 @@ export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
     const values = [id];
     const promisePool = pool.promise();
     try {
-        const user: Usuario = await promisePool.query(sql, values);                
-        return user;
+        const user: any = await promisePool.query(sql, values);                
+        return user[0][0];
     } catch (err) {
         console.error(err);
         throw new Error;

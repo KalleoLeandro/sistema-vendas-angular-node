@@ -38,6 +38,10 @@ export class ConsultasService {
     return this.http.get<any>(`${this.url}listaprodutos`);
   }
 
+  public consultaListaProdutosPorNome(nome:string):Observable<any>{
+    return this.http.get<any>(`${this.url}listaprodutopornome/${nome}`);
+  }
+
   public consultaProdutoPorId(id:number):Observable<any>{
     return this.http.get<any>(`${this.url}listaprodutoporid?id=${id}`);
   }

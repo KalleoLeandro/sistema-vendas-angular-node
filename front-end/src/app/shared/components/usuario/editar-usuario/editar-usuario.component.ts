@@ -150,7 +150,7 @@ export class EditarUsuarioComponent implements OnInit {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.consultaService.consultaUsuarioPorId(this.id).pipe(first()).subscribe({
       next: (res) => {
-        this.dados = res[0][0];
+        this.dados = res;
         this.editForm.patchValue({
           id: this.dados.id,
           endereco_id: this.dados.endereco_id,
