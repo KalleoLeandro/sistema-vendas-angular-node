@@ -16,7 +16,7 @@ export class EditarProdutoComponent implements OnInit{
   public resposta: string = "";
   public categoria: Array<string> = ["Alimentos", "Limpeza", "Eletrônicos", "Vestuário", "Brinquedos", "Acessórios"];
   public medida: Array<string> = ["Kg", "Mt", "Un", "Lt", "Cx", "Pc"];
-  public token:any = localStorage.getItem('authorization');    
+  public token:any = sessionStorage.getItem('authorization');    
   public id:any;
   public dados: any;
 
@@ -24,12 +24,12 @@ export class EditarProdutoComponent implements OnInit{
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {
         },
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -38,7 +38,7 @@ export class EditarProdutoComponent implements OnInit{
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.consultaService.consultaProdutoPorId(this.id).pipe(first()).subscribe({
+    this.consultaService.consultaProdutoPorId(this.id, this.token as string).pipe(first()).subscribe({
       next: (res) => {
         this.dados = res;        
         this.editForm.patchValue({
@@ -66,8 +66,7 @@ export class EditarProdutoComponent implements OnInit{
   });
 
   public async submitForm() {        
-    if (this.editForm.valid) {        
-      console.log('Editar');
+    if (this.editForm.valid) {              
       //this.cadastroForm.reset();
     } else {
       console.error("Valores inválidos no formulário");

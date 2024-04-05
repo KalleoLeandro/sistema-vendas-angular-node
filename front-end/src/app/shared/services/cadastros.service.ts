@@ -18,23 +18,28 @@ export class CadastrosService {
 
   constructor(private http: HttpClient) { }
 
-  public cadastrarUsuario(formulario:FormGroup):Observable<string>{
+  public cadastrarUsuario(formulario:FormGroup, token:string):Observable<string>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<string>(`${this.url}cadastrarusuario`, formulario.getRawValue() , this.httpOptions);    
   }
 
-  public atualizarUsuario(formulario:FormGroup):Observable<string>{
+  public atualizarUsuario(formulario:FormGroup, token:string):Observable<string>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.put<string>(`${this.url}atualizarusuario`, formulario.getRawValue() , this.httpOptions);    
   }
 
-  public excluirUsuario(id:number):Observable<any>{
+  public excluirUsuario(id:number, token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.delete<string>(`${this.url}excluirusuario/${id}`, this.httpOptions);    
   }
 
-  public cadastrarProduto(formulario:FormGroup):Observable<string>{
+  public cadastrarProduto(formulario:FormGroup, token:string):Observable<string>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<string>(`${this.url}cadastrarproduto`, formulario.getRawValue() , this.httpOptions);    
   }
 
-  public excluirProduto(id:number):Observable<any>{
+  public excluirProduto(id:number,token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.delete<string>(`${this.url}excluirproduto/${id}`, this.httpOptions);    
   }
 }

@@ -13,7 +13,7 @@ import { LoginService } from 'src/app/shared/services/login.service';
 })
 export class ConsultaUsuarioComponent implements OnInit{
   
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
   public lista:Array<Usuario> = [];  
   public resposta:string = "";
   public confirmacao:boolean = true;
@@ -23,12 +23,12 @@ export class ConsultaUsuarioComponent implements OnInit{
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {          
         },          
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -36,7 +36,7 @@ export class ConsultaUsuarioComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.consultaService.consultaListaUsuarios().subscribe({
+    this.consultaService.consultaListaUsuarios(this.token as string).subscribe({
       next: (res) => {   
         this.lista = res;
         const listaFormatada: Array<Usuario> = this.lista.map(x => {
@@ -67,7 +67,7 @@ export class ConsultaUsuarioComponent implements OnInit{
 
   public confirmar(){    
     this.confirmacao = false;
-    this.cadastrosService.excluirUsuario(this.userId).subscribe({
+    this.cadastrosService.excluirUsuario(this.userId, this.token as string).subscribe({
       next: (res) =>{        
         this.resposta = "Usuário excluido com sucesso!";    
       },

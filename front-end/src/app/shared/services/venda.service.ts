@@ -17,15 +17,18 @@ export class VendaService {
 
   constructor(private http: HttpClient) { }
 
-  public removerProdutos(produtos:Array<any>):Observable<any>{
+  public removerProdutos(produtos:Array<any>, token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<any>(`${this.url}removerprodutos`, {produtos}, this.httpOptions);
   }
 
-  public adicionarProdutos(produtos:Array<any>):Observable<any>{
+  public adicionarProdutos(produtos:Array<any>, token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<any>(`${this.url}adicionarprodutos`, {produtos}, this.httpOptions);
   }
 
   public efetuarVenda(produtos:Array<any>, token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<any>(`${this.url}efetuarvenda`, {produtos, token}, this.httpOptions);
   }
 }

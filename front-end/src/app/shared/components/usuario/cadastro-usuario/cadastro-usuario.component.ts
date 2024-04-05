@@ -118,18 +118,18 @@ export class CadastroUsuarioComponent {
     perfil: ['']
   });
 
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router) {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {          
         },          
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -138,7 +138,7 @@ export class CadastroUsuarioComponent {
 
   public async submitForm() {
     if (this.cadastroForm.valid) {
-      this.consultaService.validarDados(this.cadastroForm).subscribe({
+      this.consultaService.validarDados(this.cadastroForm, this.token as string).subscribe({
         next: (res) => {                
           this.cadastrarUsuario();
           this.cadastroForm.reset();
@@ -177,7 +177,7 @@ export class CadastroUsuarioComponent {
   }
 
   public cadastrarUsuario() {
-    this.cadastrosService.cadastrarUsuario(this.cadastroForm).subscribe({
+    this.cadastrosService.cadastrarUsuario(this.cadastroForm, this.token as string).subscribe({
       next: (res)=>{     
         this.resposta = res;
         document.getElementById("botaoModal")?.click();           

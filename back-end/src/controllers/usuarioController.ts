@@ -20,7 +20,7 @@ export const listaUsuarios = async (req: Request, res: Response) => {
     if (listaUsuarios) {
         res.status(200).json(listaUsuarios);
     } else {
-        res.status(500).end();
+        res.status(500).json({message:"Erro interno do servidor", statusCode: 500, service: "usuarioServices"});
     }
 }
 

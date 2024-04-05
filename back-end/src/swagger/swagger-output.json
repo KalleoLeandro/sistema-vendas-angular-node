@@ -1,0 +1,222 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API-SISTEMA-VENDAS",
+        "description": "Teste de swagger-api",
+        "version": "1.0.0"
+    },
+    "components": {
+        "examples": {},
+        "headers": {},
+        "parameters": {},
+        "requestBodies": {},
+        "responses": {},
+        "schemas": {
+            "Usuario": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "cpf": {
+                        "type": "string"
+                    },
+                    "dataNascimento": {
+                        "type": "string"
+                    },
+                    "endereco_id": {
+                        "type": "number"
+                    },
+                    "dados_login_id": {
+                        "type": "number"
+                    },
+                    "contato_id": {
+                        "type": "number"
+                    },
+                    "sexo": {
+                        "type": "string"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "celular": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "cep": {
+                        "type": "string"
+                    },
+                    "rua": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "string"
+                    },
+                    "complemento": {
+                        "type": "string"
+                    },
+                    "bairro": {
+                        "type": "string"
+                    },
+                    "cidade": {
+                        "type": "string"
+                    },
+                    "uf": {
+                        "type": "string"
+                    },
+                    "login": {
+                        "type": "string"
+                    },
+                    "senha": {
+                        "type": "string"
+                    },
+                    "perfil": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome",
+                    "cpf",
+                    "dataNascimento",
+                    "endereco_id",
+                    "dados_login_id",
+                    "contato_id",
+                    "sexo"
+                ]
+            },
+            "Produto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "precoCusto": {
+                        "type": "number"
+                    },
+                    "precoVenda": {
+                        "type": "number"
+                    },
+                    "quantidade": {
+                        "type": "number"
+                    },
+                    "medida": {
+                        "type": "string"
+                    },
+                    "categoria": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome",
+                    "precoCusto",
+                    "precoVenda",
+                    "quantidade",
+                    "medida",
+                    "categoria"
+                ]
+            },
+            "Erro": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "statusCode": {
+                        "type": "number"
+                    },
+                    "service": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "message",
+                    "statusCode",
+                    "service"
+                ]
+            }
+        }
+    },
+    "paths": {
+        "/listausuarios": {
+            "get": {
+                "operationId": "Execute /listausuarios",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/Usuario"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/listaprodutopornome/{nome}": {
+            "get": {
+                "summary": "Retorna um produto com base no nome fornecido",
+                "operationId": "Execute /listaprodutopornome/{nome}",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Nome do produto"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Produto"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Ambiente Local"
+        }
+    ]
+}

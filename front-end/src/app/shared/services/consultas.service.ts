@@ -12,13 +12,14 @@ export class ConsultasService {
 
    public httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',      
+      'Content-Type': 'application/json',    
     })
   }  
 
   constructor(private http: HttpClient) { }
 
-  public validarDados(formulario:FormGroup):Observable<boolean>{
+  public validarDados(formulario:FormGroup, token:string):Observable<boolean>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.post<boolean>(`${this.url}validarformulario`, formulario.getRawValue() , this.httpOptions);    
   }
 
@@ -26,23 +27,27 @@ export class ConsultasService {
     return this.http.get<any>(`https://viacep.com.br/ws/${cep}/json`);    
   }
 
-  public consultaListaUsuarios(): Observable<any>{
-    return this.http.get<any>(`${this.url}listausuarios`);    
+  public consultaListaUsuarios(token:string): Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
+    return this.http.get<any>(`${this.url}listausuarios`, this.httpOptions);    
   }
 
-  public consultaUsuarioPorId(id:number): Observable<any>{
-    return this.http.get<any>(`${this.url}listausuarioporid?id=${id}`);
+  public consultaUsuarioPorId(id:number, token:string): Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
+    return this.http.get<any>(`${this.url}listausuarioporid?id=${id}`, this.httpOptions);
   }
   
-  public consultaListaProdutos():Observable<any>{
-    return this.http.get<any>(`${this.url}listaprodutos`);
+  public consultaListaProdutos(token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
+    return this.http.get<any>(`${this.url}listaprodutos`, this.httpOptions);
   }
 
-  public consultaListaProdutosPorNome(nome:string):Observable<any>{
-    return this.http.get<any>(`${this.url}listaprodutopornome/${nome}`);
+  public consultaListaProdutosPorNome(nome:string, token:string):Observable<any>{
+
+    return this.http.get<any>(`${this.url}listaprodutopornome/${nome}`, this.httpOptions);
   }
 
-  public consultaProdutoPorId(id:number):Observable<any>{
-    return this.http.get<any>(`${this.url}listaprodutoporid?id=${id}`);
+  public consultaProdutoPorId(id:number,token:string):Observable<any>{
+    return this.http.get<any>(`${this.url}listaprodutoporid?id=${id}`, this.httpOptions);
   }
 }

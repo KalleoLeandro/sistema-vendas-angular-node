@@ -54,7 +54,8 @@ export const decriptografia = (hash: string) => {
     -----END RSA PRIVATE KEY-----`;
 
     const privateKey = forge.pki.privateKeyFromPem(privateKeyPem);
-    const buffer = Buffer.from(hash, 'base64').toString();
+    
+    //const buffer = Buffer.from(hash, 'base64').toString();
 
     const mensagem = privateKey.decrypt(forge.util.decode64(hash));
 

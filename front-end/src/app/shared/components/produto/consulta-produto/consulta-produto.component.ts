@@ -13,7 +13,7 @@ import { LoginService } from 'src/app/shared/services/login.service';
 })
 export class ConsultaProdutoComponent implements OnInit {
 
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
   public confirmacao: boolean = true;
   public lista:Array<ListaProdutosResponse> = [];  
   public resposta:string = "";
@@ -23,12 +23,12 @@ export class ConsultaProdutoComponent implements OnInit {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {          
         },          
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -36,7 +36,7 @@ export class ConsultaProdutoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.consultaService.consultaListaProdutos().subscribe({
+    this.consultaService.consultaListaProdutos(this.token as string).subscribe({
       next: (res) => {   
         this.lista = res;
         const listaFormatada: Array<ListaProdutosResponse> = this.lista.map(x => {          
@@ -76,7 +76,7 @@ export class ConsultaProdutoComponent implements OnInit {
 
   public confirmar(){    
     this.confirmacao = false;
-    this.cadastrosService.excluirProduto(this.productId).subscribe({
+    this.cadastrosService.excluirProduto(this.productId, this.token as string).subscribe({
       next: (res) =>{        
         this.resposta = "Produto excluido com sucesso!";
       },

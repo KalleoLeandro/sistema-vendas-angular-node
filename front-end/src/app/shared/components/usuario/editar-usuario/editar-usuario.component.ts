@@ -127,19 +127,19 @@ export class EditarUsuarioComponent implements OnInit {
   public id: any;
 
   public dados: any;
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private consultaService: ConsultasService, private cadastrosService: CadastrosService, private router: Router, private activatedRoute: ActivatedRoute) {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {
 
         },
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -148,7 +148,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.consultaService.consultaUsuarioPorId(this.id).pipe(first()).subscribe({
+    this.consultaService.consultaUsuarioPorId(this.id, this.token as string).pipe(first()).subscribe({
       next: (res) => {
         this.dados = res;
         this.editForm.patchValue({
@@ -197,9 +197,9 @@ export class EditarUsuarioComponent implements OnInit {
 
   public async submitForm() {    
     if (this.editForm.valid) {
-      this.consultaService.validarDados(this.editForm).subscribe({
+      this.consultaService.validarDados(this.editForm, this.token as string).subscribe({
         next: (res) => {
-          this.cadastrosService.atualizarUsuario(this.editForm).pipe(first()).subscribe(()=>{
+          this.cadastrosService.atualizarUsuario(this.editForm, this.token as string).pipe(first()).subscribe(()=>{
             this.resposta = `Usuário atualizado com sucesso!`;
             document.getElementById("botaoModal")?.click();
           });                    

@@ -16,18 +16,18 @@ export class CadastrarProdutoComponent {
   public categoria: Array<string> = ["Alimentos", "Limpeza", "Eletrônicos", "Vestuário", "Brinquedos", "Acessórios"];
   public medida: Array<string> = ["Kg", "Mt", "Un", "Lt", "Cx", "Pc"];
 
-  public token = localStorage.getItem('authorization');  
+  public token = sessionStorage.getItem('authorization');  
 
   constructor(private formBuilder: FormBuilder, private loginService: LoginService, private cadastrosService: CadastrosService, private router: Router) {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {
         },
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -57,7 +57,7 @@ export class CadastrarProdutoComponent {
   }
 
   public cadastrarProduto() {    
-    this.cadastrosService.cadastrarProduto(this.cadastroForm).subscribe({
+    this.cadastrosService.cadastrarProduto(this.cadastroForm, this.token as string).subscribe({
       next: (res) => {
         this.resposta = res;
         document.getElementById("botaoModal")?.click();

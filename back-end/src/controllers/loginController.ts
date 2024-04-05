@@ -4,9 +4,6 @@ import { decriptografia } from '../utils/utils';
 import { LoginRequest } from '../models/Login';
 import { validarToken, buscarLogin, gerarToken, validarLogin, retornaLogin } from '../services/loginServices';
 
-const pool = require('../db/conn');
-var forge = require('node-forge');
-
 export const logar = async (req: Request, res: Response) => {
 
     const hash: string = req.body.hash;

@@ -9,23 +9,23 @@ import { Router } from '@angular/router';
 })
 export class MainComponent{
 
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
   public usuarioAtivo:string = "";
 
   constructor(private loginService: LoginService, private router: Router){
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {  
         },          
         error: (err) => {
           console.error(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
-      this.loginService.userPorToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.userPorToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {
           this.usuarioAtivo = res.login;
         },          
@@ -37,7 +37,7 @@ export class MainComponent{
   }
 
   public logout(){    
-    localStorage.removeItem("authorization");
+    sessionStorage.removeItem("authorization");
     this.router.navigate(['/']);
   }
 }

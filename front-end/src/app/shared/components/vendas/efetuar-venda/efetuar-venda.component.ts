@@ -17,7 +17,7 @@ export class EfetuarVendaComponent {
   public produto: string = "";
   public produtoTitulo: string = "";
   public total: number = 0;
-  public token = localStorage.getItem('authorization');
+  public token = sessionStorage.getItem('authorization');
   public listaProdutos: Array<ListaProdutosResponse> = [];
   public listaVenda: Array<any> = [];
   public aviso: boolean = true;
@@ -26,12 +26,12 @@ export class EfetuarVendaComponent {
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
-      this.loginService.validarToken(localStorage.getItem('authorization') as string).subscribe({
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
         next: (res) => {
         },
         error: (err) => {
           console.log(err);
-          localStorage.removeItem("authorization");
+          sessionStorage.removeItem("authorization");
           this.router.navigate(['/']);
         }
       });
@@ -45,7 +45,7 @@ export class EfetuarVendaComponent {
   });
 
   public limparFormulario() {
-    this.vendaService.adicionarProdutos(this.vendaForm.controls['listaVenda'].value).subscribe({
+    this.vendaService.adicionarProdutos(this.vendaForm.controls['listaVenda'].value, this.token as string).subscribe({
       next: (res) => {
         this.listaVenda = [];
       },
@@ -58,7 +58,7 @@ export class EfetuarVendaComponent {
 
   public listarProdutosPorNome() {
     if (this.produto != "") {
-      this.consultaService.consultaListaProdutosPorNome(this.produto).subscribe({
+      this.consultaService.consultaListaProdutosPorNome(this.produto, this.token as string).subscribe({
         next: (res) => {
           this.listaProdutos = res;
           const listaFormatada: Array<ListaProdutosResponse> = this.listaProdutos.map(x => {
@@ -126,9 +126,9 @@ export class EfetuarVendaComponent {
 
   public alterarQuantidadeProdutos(produtos: Array<any>, tipoAlteracao: string): Observable<any> {
     if (tipoAlteracao === 'remover') {
-      return this.vendaService.removerProdutos(produtos);
+      return this.vendaService.removerProdutos(produtos, this.token as string);
     } else {
-      return this.vendaService.adicionarProdutos(produtos)
+      return this.vendaService.adicionarProdutos(produtos, this.token as string);
     }
   }
 
