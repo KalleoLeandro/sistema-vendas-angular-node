@@ -18,7 +18,7 @@ server.use(cors());
 
 //Declaração de cors
 server.use(cors({
-    origin: '*',
+    origin: 'http://localhost:4200',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
 

@@ -29,6 +29,6 @@ export class VendaService {
 
   public efetuarVenda(produtos:Array<any>, token:string):Observable<any>{
     this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
-    return this.http.post<any>(`${this.url}efetuarvenda`, {produtos, token}, this.httpOptions);
+    return this.http.post<any>(`${this.url}efetuarvenda`, {produtos}, this.httpOptions);
   }
 }

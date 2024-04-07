@@ -43,7 +43,7 @@ export class ConsultasService {
   }
 
   public consultaListaProdutosPorNome(nome:string, token:string):Observable<any>{
-
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.get<any>(`${this.url}listaprodutopornome/${nome}`, this.httpOptions);
   }
 

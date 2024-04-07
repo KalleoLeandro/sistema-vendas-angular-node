@@ -35,8 +35,9 @@ export const buscarProdutoPorId = async (id:number): Promise<Produto> =>{
     const promisePool = pool.promise();
     try {
         const produto: any = await promisePool.query(sql, values);
+        console.log(produto[0]);
         return produto[0][0];
-    } catch (err) {
+    } catch (err) {        
         console.error(err);
         throw new Error;
     }

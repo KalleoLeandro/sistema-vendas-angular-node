@@ -23,13 +23,17 @@ export const listaProdutos = async (req: Request, res: Response) => {
 
 export const listarProductPorId = async (req: Request, res: Response) => {
     const id: any = req.query.id;
-    const produto: Produto = await buscarProdutoPorId(id);
-    if (produto) {
-        console.log(produto);
-        res.status(200).json(produto);
-    } else {
+    console.log(id);
+    try{
+        const produto: Produto = await buscarProdutoPorId(id);    
+        if (produto) {        
+            res.status(200).json(produto);
+        } else {
+            res.status(200).json({message:"Não há produtos com o id selecionado!"});
+        }
+    }catch(e){
         res.status(500).end();
-    }
+    }    
 }
 
 export const listaProdutosPorNome = async (req: Request, res: Response) => {
@@ -66,7 +70,7 @@ export const adicionarProdutos = async (req: Request, res: Response) => {
     const produtos: any = req.body.produtos;
     const resultado: boolean = await atualizarAdicaoProdutos(produtos);
     if (resultado) {
-        res.status(204).json("Produto excluído com sucesso!");
+        res.status(204).json("Produto adicionado com sucesso!");
     } else {
         res.status(500).end();
     }

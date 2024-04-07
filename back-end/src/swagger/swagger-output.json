@@ -2,10 +2,36 @@
     "openapi": "3.0.0",
     "info": {
         "title": "API-SISTEMA-VENDAS",
-        "description": "Teste de swagger-api",
+        "description": "Swagger documentação do sistema de vendas",
         "version": "1.0.0"
     },
+    "tags": [
+        {
+            "name": "Login",
+            "description": "Endpoints relacionados a login"
+        },
+        {
+            "name": "Usuários",
+            "description": "Endpoints relacionados a usuários"
+        },
+        {
+            "name": "Produtos",
+            "description": "Endpoints relacionados a produtos"
+        },
+        {
+            "name": "Vendas",
+            "description": "Endpoints relacionados a venda"
+        }
+    ],
     "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Token"
+            }
+        },
         "examples": {},
         "headers": {},
         "parameters": {},
@@ -123,6 +149,79 @@
                     "categoria"
                 ]
             },
+            "Jwt": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string"
+                    },
+                    "userType": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "userId",
+                    "userType"
+                ]
+            },
+            "Token": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "token"
+                ]
+            },
+            "Auth": {
+                "type": "object",
+                "properties": {
+                    "auth": {
+                        "type": "boolean"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "auth",
+                    "token"
+                ]
+            },
+            "Venda": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "id_vendedor": {
+                        "type": "number"
+                    },
+                    "lista": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Produto"
+                        }
+                    }
+                },
+                "required": [
+                    "id_vendedor",
+                    "lista"
+                ]
+            },
+            "Hash": {
+                "type": "object",
+                "properties": {
+                    "hash": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "hash"
+                ]
+            },
             "Erro": {
                 "type": "object",
                 "properties": {
@@ -147,7 +246,16 @@
     "paths": {
         "/listausuarios": {
             "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Retorna todos os usuários",
                 "operationId": "Execute /listausuarios",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -173,10 +281,66 @@
                 }
             }
         },
+        "/listausuarioporid": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Retorna um usuario com base no id fornecido",
+                "operationId": "Execute /listausuarioporid",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Id do usuário"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Usuario"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/listaprodutopornome/{nome}": {
             "get": {
+                "tags": [
+                    "Produtos"
+                ],
                 "summary": "Retorna um produto com base no nome fornecido",
                 "operationId": "Execute /listaprodutopornome/{nome}",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "nome",
@@ -198,6 +362,503 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/listaprodutoporid": {
+            "get": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Retorna um produto com base no id fornecido",
+                "operationId": "Execute /listaprodutoporid",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Id do produto"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Produto"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Valida o login e senha informados e retorna um token",
+                "operationId": "Execute /login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Hash"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Auth"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/validartoken": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Valida o Token informado",
+                "operationId": "Execute /validartoken",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/userportoken": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Localiza o usuário por token informado",
+                "operationId": "Execute /userportoken",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "success": {
+                                        "value": {
+                                            "login": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cadastrarusuario": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Cadastra o usuário com os dados informados",
+                "operationId": "Execute /cadastrarusuario",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Usuario"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cadastrarproduto": {
+            "post": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Cadastra o produto com os dados informados",
+                "operationId": "Execute /cadastrarproduto",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Produto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/adicionarprodutos": {
+            "post": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Adiciona uma quantidade ao produto com os dados informados",
+                "operationId": "Execute /adicionarprodutos",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "produtos": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Produto"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/removerprodutos": {
+            "post": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Remove uma quantidade de produtos com os dados informados",
+                "operationId": "Execute /removerprodutos",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "produtos": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Produto"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/efetuarvenda": {
+            "post": {
+                "tags": [
+                    "Vendas"
+                ],
+                "summary": "Grava uma venda efetuada e seus respectivos produtos na base",
+                "operationId": "Execute /efetuarvenda",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "produtos": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Produto"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/atualizarusuario": {
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualiza os dados de um usuario com base nos valores fornecidos",
+                "operationId": "Execute /atualizarusuario",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Usuario"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/excluirusuario/{id}": {
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Apaga os dados de um usuario com base nos valores fornecidos",
+                "operationId": "Execute /excluirusuario/{id}",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "id do Usuário"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/excluirproduto/{id}": {
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Apaga os dados de um usuario com base nos valores fornecidos",
+                "operationId": "Execute /excluirproduto/{id}",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "id do Produto"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Ok"
                     },
                     "500": {
                         "description": "Erro interno do servidor",

@@ -132,7 +132,7 @@ export const atualizarDadosLogin = async (userEdit: Usuario) => {
     });
 }
 
-export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
+export const buscarUsuarioCompletoPorId = async (id: any): Promise<Usuario> => {
     const sql = `select usuario.id, usuario.nome, usuario.cpf, usuario.data_nascimento, usuario.sexo, usuario.dados_login_id, usuario.endereco_id, usuario.contato_id,
     contato.telefone, contato.celular, contato.email,
     endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, endereco.uf, endereco.cep, 
@@ -143,6 +143,19 @@ export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
     dados_login.id = usuario.dados_login_id
     where usuario.id = ?
     LIMIT 1`;
+    const values = [id];
+    const promisePool = pool.promise();
+    try {
+        const user: any = await promisePool.query(sql, values);                
+        return user[0][0];
+    } catch (err) {
+        console.error(err);
+        throw new Error;
+    }
+}
+
+export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
+    const sql = `select * from usuario where id = ? LIMIT 1`;
     const values = [id];
     const promisePool = pool.promise();
     try {

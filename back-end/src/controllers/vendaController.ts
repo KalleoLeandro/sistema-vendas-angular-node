@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { gravarVenda } from '../services/vendaService';
 
 export const efetuarVenda = async (req: Request, res: Response) => {
-    const token:string = req.body.token;    
+    const token:string = req.headers.authorization as string;    
     const produtos:Array<any> = req.body.produtos;    
     const resultado: boolean = await gravarVenda(produtos,token);
     if (resultado) {

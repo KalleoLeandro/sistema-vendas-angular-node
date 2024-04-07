@@ -5,10 +5,9 @@ import { LoginRequest } from '../models/Login';
 import { validarToken, buscarLogin, gerarToken, validarLogin, retornaLogin } from '../services/loginServices';
 
 export const logar = async (req: Request, res: Response) => {
-
-    const hash: string = req.body.hash;
-    const login: LoginRequest = JSON.parse(decriptografia(hash));
-    try {
+    try {        
+        const hash: string = req.body.hash;        
+        const login: LoginRequest = JSON.parse(decriptografia(hash));
         const validar: number = await validarLogin(login);
         if (validar === 401) {
             res.status(401).end();
@@ -25,9 +24,9 @@ export const logar = async (req: Request, res: Response) => {
     }
 }
 
-export const validaToken = async (req: Request, res: Response) => {
-    const token: string = req.headers.authorization as string;
+export const validaToken = async (req: Request, res: Response) => {    
     try {
+        const token: string = req.headers.authorization as string;
         const resposta = await validarToken(token);
         switch (resposta) {
             case 401:
@@ -50,15 +49,14 @@ export const validaToken = async (req: Request, res: Response) => {
 }
 
 export const userPorToken = async (req: Request, res: Response) => {
-    const token: string = req.headers.authorization as string;
     try {
-        const nomeLogin: string = await retornaLogin(token);        
-        if(nomeLogin){
+        const token: string = req.headers.authorization as string;    
+        const nomeLogin: string = await retornaLogin(token);
+        if (nomeLogin) {
             res.status(200).json({ login: nomeLogin });
         } else {
-
-        }
-        res.status(500).end();
+            res.status(500).end();
+        }        
     } catch (err) {
         console.error(err);
         res.status(500).end();
