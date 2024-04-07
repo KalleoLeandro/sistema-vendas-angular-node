@@ -232,8 +232,7 @@ export const rollback = () => {
     pool.getConnection((err: Error, connection: any) => {
         connection.rollback(() => {
             connection.release();
-        })
-
+        });
     });
 }
 

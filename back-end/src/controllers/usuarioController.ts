@@ -17,7 +17,7 @@ export const cadastrarUser = async (req: Request, res: Response) => {
 
 export const listaUsuarios = async (req: Request, res: Response) => {
     const listaUsuarios: Array<Usuario> = await listarUsuarios();
-    if (listaUsuarios) {
+    if (listaUsuarios.length > 0) {
         res.status(200).json(listaUsuarios);
     } else {
         res.status(500).json({message:"Erro interno do servidor", statusCode: 500, service: "usuarioServices"});
