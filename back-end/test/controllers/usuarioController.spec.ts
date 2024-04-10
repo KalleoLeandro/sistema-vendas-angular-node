@@ -207,7 +207,7 @@ describe('Testes do método listarUsuarioPorId', ()=>{
             end: jest.fn(), // Mock da função end
         };
 
-        (buscarUsuarioPorId as jest.Mock).mockImplementation(() => Promise.resolve(null));
+        (buscarUsuarioPorId as jest.Mock).mockImplementation(() => Promise.resolve());
 
         await usuarioController.listarUsuarioPorId(req as any, res as any);
 

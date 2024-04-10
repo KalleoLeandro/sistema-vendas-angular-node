@@ -14,7 +14,7 @@ export const cadastrarProdutos = async (req: Request, res: Response) => {
 
 export const listaProdutos = async (req: Request, res: Response) => {
     const listaProdutos: Array<Produto> = await listarProdutos();
-    if (listaProdutos) {
+    if (listaProdutos.length > 0) {
         res.status(200).json(listaProdutos);
     } else {
         res.status(500).end();
@@ -22,11 +22,10 @@ export const listaProdutos = async (req: Request, res: Response) => {
 }
 
 export const listarProductPorId = async (req: Request, res: Response) => {
-    const id: any = req.query.id;
-    console.log(id);
+    const id: any = req.query.id;    
     try{
         const produto: Produto = await buscarProdutoPorId(id);    
-        if (produto) {        
+        if (produto != null) {        
             res.status(200).json(produto);
         } else {
             res.status(200).json({message:"Não há produtos com o id selecionado!"});
@@ -39,7 +38,7 @@ export const listarProductPorId = async (req: Request, res: Response) => {
 export const listaProdutosPorNome = async (req: Request, res: Response) => {
     const nome: any = req.params.nome;
     const listaProdutos: Array<Produto> = await buscarProdutosPorNome(nome);
-    if (listaProdutos) {
+    if (listaProdutos.length > 0) {
         res.status(200).json(listaProdutos);
     } else {
         res.status(500).end();
@@ -85,6 +84,4 @@ export const removerProdutos = async (req: Request, res: Response) => {
     } else {
         res.status(500).end();
     }
-    res.status(200);
-
 }

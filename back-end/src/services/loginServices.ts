@@ -5,22 +5,37 @@ const pool = require('../db/conn');
 
 
 export const validarLogin = async (login: LoginRequest) => {
-    let retorno: number = 0;
-    const sql = `select * from dados_login where login = ? and senha = ?`;
-    const values = [login.usuario, login.senha];
-    const promisePool = pool.promise();
-    let valor: Array<any> = await promisePool.query(sql, values, (err: Error, data: any) => {
-        if (err) {
-            retorno = 500;
+    try {
+        const sql = `select * from dados_login where login = ? and senha = ?`;
+        const values = [login.usuario, login.senha];
+        const promisePool = pool.promise();
+        let statusCode; // Defina um código de status padrão para o caso de ocorrer um erro
+
+        try {
+            const [rows] = await promisePool.query(sql, values);
+            
+            if (rows.length > 0) {
+                statusCode = 200; // OK
+            } else {
+                statusCode = 401; // Unauthorized
+            }
+        } catch (error) {
+            console.error("Erro durante a consulta ao banco de dados:", error);
+            statusCode = 500; // Internal Server Error
+        } finally {
+            // Certifique-se de liberar a conexão de volta para o pool
+            if (promisePool && promisePool.end) {
+                await promisePool.end();
+            }
         }
-    });
-    if (valor[0].length > 0) {
-        retorno = 200;
-    } else {
-        retorno = 401;
-    }
-    return retorno;
+
+        return statusCode;
+    } catch (error) {
+        console.error("Erro inesperado durante a validação do login:", error);
+        return 500; // Internal Server Error
+    } 
 }
+
 
 
 
