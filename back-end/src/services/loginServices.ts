@@ -22,13 +22,7 @@ export const validarLogin = async (login: LoginRequest) => {
         } catch (error) {
             console.error("Erro durante a consulta ao banco de dados:", error);
             statusCode = 500; // Internal Server Error
-        } finally {
-            // Certifique-se de liberar a conexão de volta para o pool
-            if (promisePool && promisePool.end) {
-                await promisePool.end();
-            }
         }
-
         return statusCode;
     } catch (error) {
         console.error("Erro inesperado durante a validação do login:", error);
@@ -43,7 +37,7 @@ export const buscarLogin = async (login: LoginRequest) => {
     let retorno: LoginResponse = { id: 0, perfil: "" };
     const sql = `select usuario.id, dados_login.perfil from usuario inner join dados_login on usuario.dados_login_id = dados_login.id where login = ? and senha = ?`;
     const values = [login.usuario, login.senha];
-    const promisePool = pool.promise();
+    const promisePool = pool.promise();     
     let valor: Array<any> = await promisePool.query(sql, values, (err: Error, data: any) => {
         if (err) {
             console.log(err);

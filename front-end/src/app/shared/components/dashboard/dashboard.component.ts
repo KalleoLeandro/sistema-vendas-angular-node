@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,8 +13,22 @@ export class DashboardComponent implements OnInit {
   public chart2: any;  
   public nomeProduto:string= 'Teste';
 
-  constructor() {
+  public token = sessionStorage.getItem('authorization'); 
 
+  constructor(private loginService: LoginService, private router: Router) {
+    if (this.token === null) {
+      this.router.navigate(['/']);
+    } else {
+      this.loginService.validarToken(sessionStorage.getItem('authorization') as string).subscribe({
+        next: (res) => {
+        },
+        error: (err) => {
+          console.log(err);
+          sessionStorage.removeItem("authorization");
+          this.router.navigate(['/']);
+        }
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -62,17 +78,19 @@ export class DashboardComponent implements OnInit {
 
   public data2 = {
     labels: [
-      'Auto',
-      'Vida',
-      'Funenário'
+      "Alimentos", "Limpeza", "Eletrônicos", "Vestuário", "Brinquedos", "Acessórios"
     ],
     datasets: [{
       label: 'Quantidade de Produtos no Estoque por Tipo',
-      data: [300, 50, 100],
+      data: [300, 50, 100,220,110,80],
       backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)'
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 205, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(141, 156, 179, 0.2)'
       ],
       hoverOffset: 4
     }]
@@ -82,6 +100,10 @@ export class DashboardComponent implements OnInit {
     type: 'doughnut',
     data: this.data2,
   };
+
+  public carregaDashboard(){
+
+  }
 
   createAreaChart() {
 

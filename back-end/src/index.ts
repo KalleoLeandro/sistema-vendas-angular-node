@@ -4,9 +4,8 @@ import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import routes from './routes/rotas';
 import cors from 'cors';
-import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import swaggerOptions from './swagger/swagger';
+
 
 dotenv.config();
 
@@ -18,7 +17,7 @@ server.use(cors());
 
 //Declaração de cors
 server.use(cors({
-    origin: 'http://localhost',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
 
