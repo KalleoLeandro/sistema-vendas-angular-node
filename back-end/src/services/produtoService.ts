@@ -1,20 +1,19 @@
 const pool = require('../db/conn');
 import { Produto } from '../models/Produto';
 
-export const cadastrarProduto = async (produto:Produto) =>{
-
-    let resultado: boolean = true;
+export const cadastrarProduto = async (produto:Produto) =>{    
     const sql = 'insert into produtos(nome, preco_custo, preco_venda, quantidade, medida, categoria) values(?,?,?,?,?,?)';
     const values = [produto.nome, produto.precoCusto, produto.precoVenda, produto.quantidade, produto.medida, produto.categoria];
     const promisePool = pool.promise();
-    let valor: Array<any>  = await promisePool.query(sql, values, (err: Error, data: any) => {
-        if (err) {
-            resultado = false;
-            rollback();
-        }
-    });
-    commit();
-    return resultado;
+    try {
+        await promisePool.query(sql, values);
+        commit(); // Confirma a transação se a inserção for bem-sucedida
+        return true;
+    } catch (err) {
+        console.error(err);
+        rollback(); // Reverte a transação em caso de erro
+        return false;
+    }
 }
 
 export const listarProdutos = async  ():Promise<Array<Produto>> => {
@@ -34,9 +33,9 @@ export const buscarProdutoPorId = async (id:number): Promise<Produto> =>{
     const values = [id];
     const promisePool = pool.promise();
     try {
-        const produto: any = await promisePool.query(sql, values);
-        console.log(produto[0]);
-        return produto[0][0];
+        //const produto: any = await promisePool.query(sql, values);
+        const [rows]: [Produto] = await promisePool.query(sql, values);          
+        return rows;
     } catch (err) {        
         console.error(err);
         throw new Error;
@@ -53,7 +52,10 @@ export const buscarProdutosPorNome = async(nome:string):Promise<Array<Produto>> 
         return rows;
     } catch (err) {
         console.error(err);
+        rollback(); // Se você precisa executar um rollback aqui
         return [];
+    } finally {
+        commit(); // Independente do resultado, o commit é executado no bloco finally
     }
 }
 
@@ -61,16 +63,16 @@ export const atualizarProduto = async (produto:Produto) =>{
     const sql = `update produtos set nome = ?, preco_custo = ?, preco_venda = ?, quantidade = ?, medida=?, categoria=? where id = ?`;
     const values = [produto.nome, produto.precoCusto, produto.precoVenda, produto.quantidade, produto.medida, produto.categoria, produto.id];
     const promisePool = pool.promise();
-    let valor: Array<any> = await promisePool.query(sql, values, (err: Error, data: any) => {
-        if (err) {
-            rollback();
-            throw new Error();
-        } else {
-            commit();
-        }
-
-    });
-    return true;
+    try {
+        await promisePool.query(sql, values);
+        return true;
+    } catch (err) {
+        console.error(err);
+        rollback(); // Se você precisa executar um rollback aqui
+        return false;
+    } finally {
+        commit(); // Independente do resultado, o commit é executado no bloco finally
+    }
 }
 
 export const excluirProduto = async (id:number)=>{

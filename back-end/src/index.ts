@@ -43,8 +43,7 @@ server.use(routes);
 
 //Default Route
 server.use((req:Request, res:Response)=>{
-    res.status(404);
-    res.json('Recurso não encontrado!');
+    res.status(404).json('Recurso não encontrado!');
 });
 
 //server start

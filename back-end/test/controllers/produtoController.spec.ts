@@ -41,7 +41,7 @@ describe('Testes do método cadastrarProdutos da controller', () => {
         expect(res.status).toHaveBeenCalledWith(201);
 
         // Verifica se a função json foi chamada com o token
-        expect(res.json).toHaveBeenCalledWith("Produto Cadastrado com sucesso!");
+        expect(res.json).toHaveBeenCalledWith("Produto cadastrado com sucesso!");
     })
 
     it('teste cadastrarProdutos retorna 500', async () => {
@@ -108,7 +108,7 @@ describe('Testes do método listaProdutos da controller', () => {
             end: jest.fn(), // Mock da função end
         };
 
-        (listarProdutos as jest.Mock).mockImplementation(() => Promise.resolve([]));
+        (listarProdutos as jest.Mock).mockImplementation(() => Promise.reject([]));
 
         await produtoController.listaProdutos(req as any, res as any);
 
@@ -166,7 +166,7 @@ describe('Testes do método listarProductPorId da controller', () => {
 
         expect(res.status).toHaveBeenCalledWith(200);
 
-        expect(res.json).toHaveBeenCalledWith({message:"Não há produtos com o id selecionado!"});
+        expect(res.json).toHaveBeenCalledWith({ message: "Não há produtos com o ID selecionado!" });
     })
 
     it('teste listarProductPorId retorna 500', async () => {
@@ -235,7 +235,7 @@ describe('Testes do método listaProdutosPorNome da controller', () => {
             end: jest.fn(), // Mock da função end
         };
 
-        (buscarProdutosPorNome as jest.Mock).mockImplementation(() => Promise.resolve([]));
+        (buscarProdutosPorNome as jest.Mock).mockImplementation(() => Promise.reject());
 
         await produtoController.listaProdutosPorNome(req as any, res as any);
 
@@ -271,7 +271,7 @@ describe('Testes do método atualizarProduct da controller', () => {
         expect(res.status).toHaveBeenCalledWith(200);
 
         // Verifica se a função json foi chamada com o token
-        expect(res.json).toHaveBeenCalledWith("Usuário atualizado com sucesso!");
+        expect(res.json).toHaveBeenCalledWith("Produto atualizado com sucesso!");
     })
 
     it('teste atualizarProduct retorna 500', async () => {
@@ -289,6 +289,27 @@ describe('Testes do método atualizarProduct da controller', () => {
         };
 
         (atualizarProduto as jest.Mock).mockImplementation(() => Promise.resolve(false));
+
+        await produtoController.atualizarProduct(req as any, res as any);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+    })
+
+    it('teste atualizarProduct retorna 500 devido catch', async () => {
+
+        const req  = {
+            body: {
+                product: {}
+            }
+        } as any as Request
+        
+        const res: Partial<Response> = {
+            status: jest.fn().mockReturnThis(), // Retorna o próprio res para encadeamento
+            json: jest.fn(), // Mock da função json
+            end: jest.fn(), // Mock da função end
+        };
+
+        (atualizarProduto as jest.Mock).mockImplementation(() => Promise.reject());
 
         await produtoController.atualizarProduct(req as any, res as any);
 
@@ -378,7 +399,7 @@ describe('Testes do método adicionarProdutos da controller', () => {
         expect(res.status).toHaveBeenCalledWith(204);
 
         // Verifica se a função json foi chamada com o token
-        expect(res.json).toHaveBeenCalledWith("Produto adicionado com sucesso!");
+        expect(res.json).toHaveBeenCalledWith("Produto(s) adicionado(s) com sucesso!");
     })
 
     it('teste excluirProduct retorna 500', async () => {
@@ -436,7 +457,7 @@ describe('Testes do método removerProdutos da controller', () => {
         expect(res.status).toHaveBeenCalledWith(204);
 
         // Verifica se a função json foi chamada com o token
-        expect(res.json).toHaveBeenCalledWith("Produto excluído com sucesso!");
+        expect(res.json).toHaveBeenCalledWith("Produto(s) removido(s) com sucesso!");
     })
 
     it('teste removerProdutos retorna 500', async () => {
