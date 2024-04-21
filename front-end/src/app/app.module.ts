@@ -26,6 +26,7 @@ import { ConsultaProdutoComponent } from './shared/components/produto/consulta-p
 import { EditarProdutoComponent } from './shared/components/produto/editar-produto/editar-produto.component';
 import { EfetuarVendaComponent } from './shared/components/vendas/efetuar-venda/efetuar-venda.component';
 import { VendaService } from './shared/services/venda.service';
+import { PdfService } from './shared/services/pdf.service';
 
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
@@ -73,7 +74,8 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     CadastrosService,
     VendaService,
     { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
-    DecimalPipe
+    DecimalPipe,
+    PdfService
   ],
   bootstrap: [AppComponent]
 })

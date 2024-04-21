@@ -48,6 +48,7 @@ export class ConsultasService {
   }
 
   public consultaProdutoPorId(id:number,token:string):Observable<any>{
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.get<any>(`${this.url}listaprodutoporid?id=${id}`, this.httpOptions);
   }
 }

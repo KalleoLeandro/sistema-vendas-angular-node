@@ -4,6 +4,7 @@ import { Usuario } from 'src/app/shared/models/Usuario';
 import { CadastrosService } from 'src/app/shared/services/cadastros.service';
 import { ConsultasService } from 'src/app/shared/services/consultas.service';
 import { LoginService } from 'src/app/shared/services/login.service';
+import { PdfService } from 'src/app/shared/services/pdf.service';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class ConsultaUsuarioComponent implements OnInit{
   public confirmacao:boolean = true;
   public userId:number=0;
 
-  constructor(private loginService: LoginService, private cadastrosService: CadastrosService,private consultaService: ConsultasService, private router: Router){
+  constructor(private loginService: LoginService, private cadastrosService: CadastrosService,private consultaService: ConsultasService, private pdfService:PdfService, private router: Router){
     if (this.token === null) {
       this.router.navigate(['/']);
     } else {
@@ -84,5 +85,23 @@ export class ConsultaUsuarioComponent implements OnInit{
 
   public editarUsuairo(id:number){        
     this.router.navigate([`./sistema/editarusuario/${id}`]);
+  }
+
+  public gerarPdf() {    
+    this.pdfService.gerarPdfUsuarios(this.token || '', this.lista).subscribe({      
+      next: (res) => {                
+        const blob = new Blob([res], { type: 'application/pdf' });
+        const downloadUrl = window.URL.createObjectURL(blob);
+        
+        // Abrir o PDF em uma nova aba
+        window.open(downloadUrl, '_blank');
+        
+        // Revocar a URL do blob após abrir a aba
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      error: (err) => {
+        console.error('Erro ao gerar PDF:', err);
+      }
+    });
   }
 }

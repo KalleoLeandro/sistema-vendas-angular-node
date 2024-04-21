@@ -28,7 +28,7 @@ export const listaProdutos = async (req: Request, res: Response) => {
 }
 
 export const listarProductPorId = async (req: Request, res: Response) => {
-    const id: any = req.query.id;
+    const id: any = req.query.id;    
     try {
         const produto: Produto = await buscarProdutoPorId(id);
         if (produto) {

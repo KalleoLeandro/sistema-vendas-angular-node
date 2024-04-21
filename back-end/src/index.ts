@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import path from 'path';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
@@ -12,8 +13,7 @@ dotenv.config();
 const server = express();
 
 server.use(express.json());
-
-server.use(cors());
+server.use(bodyParser.text({ type: 'text/html' }));
 
 //Declaração de cors
 server.use(cors({

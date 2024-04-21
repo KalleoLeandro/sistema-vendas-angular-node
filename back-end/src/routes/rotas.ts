@@ -4,6 +4,7 @@ import * as usuarioController from '../controllers/usuarioController';
 import * as produtoController from '../controllers/produtoController';
 import * as vendaController from '../controllers/vendaController';
 import * as middleware from '../middlewares/middleware';
+import * as fileController from '../controllers/fileController';
 
 const router = Router();
 
@@ -25,6 +26,8 @@ router.post('/cadastrarproduto', middleware.verificaTokenValido, produtoControll
 router.post('/adicionarprodutos', middleware.verificaTokenValido, produtoController.adicionarProdutos);
 router.post('/removerprodutos', middleware.verificaTokenValido, produtoController.removerProdutos);
 router.post('/efetuarvenda', middleware.verificaTokenValido, vendaController.efetuarVenda);
+
+router.post('/gerarpdf', fileController.gerarPdfByHtml);
 
 
 //rotas put

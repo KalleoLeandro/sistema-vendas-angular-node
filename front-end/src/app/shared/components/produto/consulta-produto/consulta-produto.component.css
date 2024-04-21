@@ -5,3 +5,7 @@
 #modal{
     display: none;
 }
+
+span{
+    cursor: pointer;
+}

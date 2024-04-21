@@ -180,12 +180,11 @@ export const buscarUsuarioCompletoPorId = async (id: any): Promise<Usuario> => {
 
 export const buscarUsuarioPorId = async (id: any): Promise<Usuario> => {
     const sql = `select * from usuario where id = ? LIMIT 1`;
-    const values = [id];
+    const values = [id];    
     const promisePool = pool.promise();
-
     try {
-        const user: any = await promisePool.query(sql, values);                
-        return user[0][0];
+        const [user] = await promisePool.query(sql, values);                  
+        return user;
     } catch (err) {
         console.error(err);
         throw new Error("Erro ao buscar usuário por ID");
@@ -199,10 +198,10 @@ export const excluirUsuario = async (id: number) => {
         const values = [id];
         const promisePool = pool.promise();
         await promisePool.query(sql, values);               
-        await excluirEndereco(usuario[0][0].endereco_id);
-        await excluirContato(usuario[0][0].contato_id);
-        await excluirDadosLogin(usuario[0][0].dados_login_id);
-        await commit();
+        await excluirEndereco(usuario.endereco_id);
+        await excluirContato(usuario.contato_id);
+        await excluirDadosLogin(usuario.dados_login_id);
+        await commit();               
         return true;
     } catch (err) {
         await rollback();

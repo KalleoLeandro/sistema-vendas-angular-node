@@ -32,7 +32,7 @@ export const listaUsuarios = async (req: Request, res: Response) => {
 }
 
 export const listarUsuarioPorId = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.query.id;    
     try {
         const usuario: Usuario = await buscarUsuarioPorId(id);
         if (usuario) {

@@ -37,10 +37,10 @@ export class EditarProdutoComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');    
     this.consultaService.consultaProdutoPorId(this.id, this.token as string).pipe(first()).subscribe({
       next: (res) => {
-        this.dados = res;        
+        this.dados = res[0];
         this.editForm.patchValue({
           id: this.dados.id,
           nome: this.dados.nome,          

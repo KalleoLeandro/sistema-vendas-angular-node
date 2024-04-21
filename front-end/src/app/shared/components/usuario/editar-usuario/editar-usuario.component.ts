@@ -147,10 +147,10 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');    
     this.consultaService.consultaUsuarioPorId(this.id, this.token as string).pipe(first()).subscribe({
       next: (res) => {
-        this.dados = res;
+        this.dados = res[0];
         this.editForm.patchValue({
           id: this.dados.id,
           endereco_id: this.dados.endereco_id,
