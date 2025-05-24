@@ -1,4 +1,5 @@
 create database sistema_gerencial;
+use sistema_gerencial;
 
 create table endereco(
 	id int PRIMARY key AUTO_INCREMENT,
@@ -36,6 +37,28 @@ create table usuario (
     endereco_id int not null,
     contato_id int not null
 );
+
+insert into endereco(cep,
+    rua, 
+    numero,    
+    bairro,
+    cidade,
+    uf) values('83085-000', 'Rua A', 100, 'Teste', 'Teste', 'PR');
+
+insert into contato(	
+    telefone,
+    celular,
+    email
+) values('4133332222','4199998888', 'teste@teste.com');
+
+insert into dados_login(    
+    login, 
+    senha,
+    perfil  
+) values('admin', 'admin', 'adm');
+
+insert into usuario(nome, cpf, data_nascimento, sexo, dados_login_id, endereco_id, contato_id) 
+values('Master User', '22233344405', '1990-01-01', 'M', 1,1,1);
 
 alter table usuario add FOREIGN key (endereco_id) REFERENCES endereco(id);
 alter table usuario add FOREIGN key (dados_login_id) REFERENCES dados_login(id);

@@ -68,6 +68,7 @@ export const buscarLoginPorId = async (id: number) => {
 }
 
 export const gerarToken = async (loginReponse: any) => {
+    console.log(loginReponse);
     const dados_login: JwtResponseKeys = {
         userId: loginReponse[0].id,
         userType: loginReponse[0].perfil
