@@ -1,26 +1,28 @@
 const pool = require('../db/conn');
 import { Produto } from '../models/Produto';
 
-export const cadastrarProduto = async (produto:Produto) =>{    
+export const cadastrarProduto = async (produto: Produto) => {
     const sql = 'insert into produtos(nome, preco_custo, preco_venda, quantidade, medida, categoria) values(?,?,?,?,?,?)';
     const values = [produto.nome, produto.precoCusto, produto.precoVenda, produto.quantidade, produto.medida, produto.categoria];
     const promisePool = pool.promise();
+
     try {
         await promisePool.query(sql, values);
-        commit(); // Confirma a transação se a inserção for bem-sucedida
+        commit();
         return true;
     } catch (err) {
         console.error(err);
-        rollback(); // Reverte a transação em caso de erro
+        rollback();
         return false;
     }
 }
 
-export const listarProdutos = async  ():Promise<Array<Produto>> => {
+export const listarProdutos = async (): Promise<Array<Produto>> => {
     const sql = `select * from produtos`;
     const promisePool = pool.promise();
+
     try {
-        const [rows]: [Array<Produto>] = await promisePool.query(sql);        
+        const [rows]: [Array<Produto>] = await promisePool.query(sql);
         return rows;
     } catch (err) {
         console.error(err);
@@ -28,127 +30,153 @@ export const listarProdutos = async  ():Promise<Array<Produto>> => {
     }
 }
 
-export const buscarProdutoPorId = async (id:number): Promise<Produto> =>{
+export const buscarProdutoPorId = async (id: number): Promise<any> => {
     const sql = `select * from produtos where id = ? LIMIT 1`;
     const values = [id];
     const promisePool = pool.promise();
+
     try {
-        //const produto: any = await promisePool.query(sql, values);
-        const [rows]: [Produto] = await promisePool.query(sql, values);          
-        return rows;
-    } catch (err) {        
+        const [rows]: any = await promisePool.query(sql, values);
+        return rows[0] ?? null;
+    } catch (err) {
         console.error(err);
-        throw new Error;
+        throw new Error('Erro ao buscar produto por ID');
     }
 }
 
-export const buscarProdutosPorNome = async(nome:string):Promise<Array<Produto>> =>{
+export const buscarProdutosPorNome = async (nome: string): Promise<Array<Produto>> => {
     const sql = `select * from produtos where nome like ?`;
     const parametro = nome + '%';
     const values = [parametro];
     const promisePool = pool.promise();
+
     try {
-        const [rows]: [Array<Produto>] = await promisePool.query(sql, values);        
+        const [rows]: [Array<Produto>] = await promisePool.query(sql, values);
         return rows;
     } catch (err) {
         console.error(err);
-        rollback(); // Se você precisa executar um rollback aqui
+        rollback();
         return [];
     } finally {
-        commit(); // Independente do resultado, o commit é executado no bloco finally
+        commit();
     }
 }
 
-export const atualizarProduto = async (produto:Produto) =>{
-    const sql = `update produtos set nome = ?, preco_custo = ?, preco_venda = ?, quantidade = ?, medida=?, categoria=? where id = ?`;
+export const atualizarProduto = async (produto: Produto) => {
+    const sql = `update produtos set nome = ?, preco_custo = ?, preco_venda = ?, quantidade = ?, medida = ?, categoria = ? where id = ?`;
     const values = [produto.nome, produto.precoCusto, produto.precoVenda, produto.quantidade, produto.medida, produto.categoria, produto.id];
     const promisePool = pool.promise();
+
     try {
         await promisePool.query(sql, values);
         return true;
     } catch (err) {
         console.error(err);
-        rollback(); // Se você precisa executar um rollback aqui
+        rollback();
         return false;
     } finally {
-        commit(); // Independente do resultado, o commit é executado no bloco finally
+        commit();
     }
 }
 
-export const excluirProduto = async (id:number)=>{
-    try {        
-        const sql = `delete from produtos where id = ?`
+export const atualizarQuantidadeProduto = async (id: number, quantidade: number) => {
+    const sql = `update produtos set quantidade = ? where id = ?`;
+    const values = [quantidade, id];
+    const promisePool = pool.promise();
+
+    try {
+        await promisePool.query(sql, values);
+        return true;
+    } catch (err) {
+        console.error(err);
+        rollback();
+        return false;
+    } finally {
+        commit();
+    }
+}
+
+export const excluirProduto = async (id: number) => {
+    try {
+        const sql = `delete from produtos where id = ?`;
         const values = [id];
         const promisePool = pool.promise();
         await promisePool.query(sql, values);
-        commit();        
-        return true;
-    }
-    catch (err) {
-        rollback();
-        console.error(err);
-        throw new Error;
-    }
-}
-
-export const atualizarAdicaoProdutos = async(produtos:Array<any>)=>{
-    let produtosAAlterar:any [] = [];
-    await Promise.all(produtos.map(async (produto: any) => {
-        let elemento: any = await buscarProdutoPorId(produto.id);
-        elemento.quantidade +=  produto.quantidade;        
-        produtosAAlterar.push(elemento);
-    }));    
-    try{
-        await Promise.all(produtosAAlterar.map(async (produto: any) => {
-            const produtoAAlterar:Produto = {
-                id: produto.id,
-                nome: produto.nome,
-                precoCusto: produto.preco_custo,
-                precoVenda: produto.preco_venda,
-                quantidade: produto.quantidade,
-                medida: produto.medida,
-                categoria: produto.categoria
-            }            
-            await atualizarProduto(produtoAAlterar);
-        }));
         commit();
         return true;
-    }catch(err){
+    } catch (err) {
         rollback();
         console.error(err);
-        throw new Error;
+        throw new Error('Erro ao excluir produto');
     }
 }
 
-export const atualizarRemocaoProdutos = async(produtos:Array<any>)=>{
-    let produtosAAlterar:any [] = [];
-    await Promise.all(produtos.map(async (produto: any) => {
-        let elemento: any = await buscarProdutoPorId(produto.id);              
-        elemento.quantidade -=  produto.quantidade;
-        if(elemento.quantidade < 0){
-            return false;
-        }
-        produtosAAlterar.push(elemento);
-    }));      
-    try{
-        await Promise.all(produtosAAlterar.map(async (produto: any) => {
-            const produtoAAlterar:Produto = {
-                id: produto.id,
-                nome: produto.nome,
-                precoCusto: produto.preco_custo,
-                precoVenda: produto.preco_venda,
-                quantidade: produto.quantidade,
-                medida: produto.medida,
-                categoria: produto.categoria
+export const atualizarAdicaoProdutos = async (produtos: Array<any>) => {
+    try {
+        await Promise.all(produtos.map(async (produto: any) => {
+            const id = Number(produto?.id);
+            const quantidade = Number(produto?.quantidade);
+
+            if (!Number.isInteger(id) || !Number.isFinite(quantidade) || quantidade <= 0) {
+                throw new Error('Dados inválidos para adição de estoque');
             }
-            await atualizarProduto(produtoAAlterar);
+
+            const elemento = await buscarProdutoPorId(id);
+
+            if (!elemento) {
+                throw new Error('Produto não encontrado');
+            }
+
+            const novaQuantidade = Number(elemento.quantidade) + quantidade;
+            const atualizado = await atualizarQuantidadeProduto(id, novaQuantidade);
+
+            if (!atualizado) {
+                throw new Error('Erro ao adicionar quantidade ao estoque');
+            }
         }));
-        commit();
+
         return true;
-    }catch(err){
+    } catch (err) {
         rollback();
         console.error(err);
-        throw new Error;
+        throw err;
+    }
+}
+
+export const atualizarRemocaoProdutos = async (produtos: Array<any>) => {
+    try {
+        await Promise.all(produtos.map(async (produto: any) => {
+            const id = Number(produto?.id);
+            const quantidade = Number(produto?.quantidade);
+
+            if (!Number.isInteger(id) || !Number.isFinite(quantidade) || quantidade <= 0) {
+                throw new Error('Dados inválidos para remoção de estoque');
+            }
+
+            const elemento = await buscarProdutoPorId(id);
+
+            if (!elemento) {
+                throw new Error('Produto não encontrado');
+            }
+
+            const novaQuantidade = Number(elemento.quantidade) - quantidade;
+
+            if (novaQuantidade < 0) {
+                throw new Error('Quantidade insuficiente em estoque');
+            }
+
+            const atualizado = await atualizarQuantidadeProduto(id, novaQuantidade);
+
+            if (!atualizado) {
+                throw new Error('Erro ao remover quantidade do estoque');
+            }
+        }));
+
+        return true;
+    } catch (err) {
+        rollback();
+        console.error(err);
+        throw err;
     }
 }
 
@@ -157,7 +185,6 @@ export const rollback = () => {
         connection.rollback(() => {
             connection.release();
         })
-
     });
 }
 
@@ -167,4 +194,4 @@ export const commit = () => {
             connection.release();
         });
     });
-} 
+}

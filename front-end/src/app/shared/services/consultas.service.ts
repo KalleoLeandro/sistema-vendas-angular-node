@@ -51,4 +51,9 @@ export class ConsultasService {
     this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
     return this.http.get<any>(`${this.url}listaprodutoporid?id=${id}`, this.httpOptions);
   }
+
+  public consultaDashboard(token: string): Observable<any> {
+    this.httpOptions.headers = this.httpOptions.headers.set('authorization', `${token}`);
+    return this.http.get<any>(`${this.url}dashboard`, this.httpOptions);
+  }
 }

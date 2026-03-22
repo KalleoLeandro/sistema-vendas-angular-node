@@ -45,9 +45,16 @@ export class EfetuarVendaComponent {
   });
 
   public limparFormulario() {
-    this.vendaService.adicionarProdutos(this.vendaForm.controls['listaVenda'].value, this.token as string).subscribe({
+    const itensCarrinho = this.listaVenda.map((item) => ({
+      id: item.id,
+      quantidade: Number(item.quantidade)
+    }));
+
+    this.vendaService.adicionarProdutos(itensCarrinho, this.token as string).subscribe({
       next: (res) => {
         this.listaVenda = [];
+        this.total = 0;
+        this.listaProdutos = [];
       },
       error: (err) => {
         console.log(err);
@@ -93,22 +100,33 @@ export class EfetuarVendaComponent {
 
   public adicionarProduto(id: number) {
     const listaVendaControl = this.vendaForm.get('listaVenda');
-    let item = this.listaProdutos.filter(x => { return x.id === id });
+    const item = this.listaProdutos.find(x => x.id === id);
+    const quantidadeSelecionada = Number(this.vendaForm.get('quantidade')?.value);
+
+    if (!item) {
+      this.resposta = "Produto não encontrado na lista";
+      document.getElementById('botaoModal')?.click();
+      return;
+    }
+
     const itemAdicionado = {
-      id: item[0].id,
-      nome: item[0].nome,
-      quantidade: this.vendaForm.get('quantidade')?.value,
-      preco: item[0].preco_venda * this.vendaForm.get('quantidade')?.value
+      id: item.id,
+      nome: item.nome,
+      quantidade: quantidadeSelecionada,
+      valorUnitario: Number(item.preco_venda),
+      preco: Number(item.preco_venda) * quantidadeSelecionada
     }
     if (listaVendaControl) {
-      if (itemAdicionado.quantidade && (itemAdicionado.quantidade > 0 && itemAdicionado.quantidade <= item[0].quantidade)) {
+      if (Number.isFinite(itemAdicionado.quantidade) && (itemAdicionado.quantidade > 0 && itemAdicionado.quantidade <= item.quantidade)) {
         this.alterarQuantidadeProdutos([itemAdicionado], 'remover').subscribe({
           next: (res) => {
             this.vendaForm.controls['listaVenda'].setValue([...(listaVendaControl.value || []), itemAdicionado]);
             this.listaVenda = [...this.vendaForm.get('listaVenda')?.value];
-            this.vendaForm.controls['nomeProduto'].setValue('');
             this.vendaForm.controls['quantidade'].setValue('');
-            this.total = this.listaVenda.reduce((acumulador, item) => acumulador + item.preco, 0);
+            this.produto = '';
+            this.vendaForm.controls['nomeProduto'].setValue('');
+            this.listaProdutos = [];
+            this.atualizarTotal();
           },
           error: (error) => {
             this.resposta = "Erro ao adicionar ao carrinho";
@@ -133,10 +151,17 @@ export class EfetuarVendaComponent {
   }
 
   public excluirProduto(id: number) {
-    const item = this.listaVenda.filter(x => { return x.id === id });
+    const item = this.listaVenda.find(x => x.id === id);
+
+    if (!item) {
+      this.resposta = "Produto não encontrado no carrinho";
+      document.getElementById('botaoModal')?.click();
+      return;
+    }
+
     const itemRemovido = {
-      id: item[0].id,
-      quantidade: item[0].quantidade
+      id: item.id,
+      quantidade: Number(item.quantidade)
     }
     this.alterarQuantidadeProdutos([itemRemovido], 'adicionar').subscribe({
       next: (res) => {
@@ -144,9 +169,11 @@ export class EfetuarVendaComponent {
         lista = lista.filter((x: { id: number; }) => { return x.id !== id });
         this.vendaForm.controls['listaVenda'].setValue(lista);
         this.listaVenda = [...this.vendaForm.get('listaVenda')?.value];
-        this.vendaForm.controls['nomeProduto'].setValue('');
         this.vendaForm.controls['quantidade'].setValue('');
-        this.total = this.listaVenda.reduce((acumulador, item) => acumulador + item.preco, 0);
+        this.produto = '';
+        this.vendaForm.controls['nomeProduto'].setValue('');
+        this.listaProdutos = [];
+        this.atualizarTotal();
       },
       error: (err) => {
         this.resposta = "Erro ao  uma excluir item do carrinho";
@@ -156,7 +183,8 @@ export class EfetuarVendaComponent {
   }
 
   public submitForm() {
-    let lista = this.vendaForm.get('listaVenda')?.value;
+    const lista = [...(this.vendaForm.get('listaVenda')?.value || [])];
+
     this.vendaService.efetuarVenda(lista, this.token!).subscribe({
       next: (res) => {
         this.resposta = "Venda efetuada com sucesso!";
@@ -165,6 +193,8 @@ export class EfetuarVendaComponent {
         this.listaVenda = [];
         this.vendaForm.controls['nomeProduto'].setValue('');
         this.vendaForm.controls['quantidade'].setValue('');
+        this.produto = '';
+        this.listaProdutos = [];
         this.total = 0;
       },
       error: (res) =>{
@@ -192,6 +222,10 @@ export class EfetuarVendaComponent {
 
   public formatarValor(valor: number): string {
     return `${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+  }
+
+  private atualizarTotal(): void {
+    this.total = this.listaVenda.reduce((acumulador, item) => acumulador + Number(item.preco || 0), 0);
   }
 
 }

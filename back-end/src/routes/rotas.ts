@@ -3,6 +3,7 @@ import * as loginController from '../controllers/loginController';
 import * as usuarioController from '../controllers/usuarioController';
 import * as produtoController from '../controllers/produtoController';
 import * as vendaController from '../controllers/vendaController';
+import * as dashboardController from '../controllers/dashboardController';
 import * as middleware from '../middlewares/middleware';
 import * as fileController from '../controllers/fileController';
 
@@ -15,6 +16,7 @@ router.get('/listausuarioporid', middleware.verificaTokenValido, usuarioControll
 router.get('/listaprodutos', middleware.verificaTokenValido, produtoController.listaProdutos);
 router.get('/listaprodutoporid', middleware.verificaTokenValido, produtoController.listarProductPorId);
 router.get('/listaprodutopornome/:nome', middleware.verificaTokenValido, produtoController.listaProdutosPorNome);
+router.get('/dashboard', middleware.verificaTokenValido, dashboardController.carregarDashboard);
 
 //rotas post
 router.post('/login', loginController.logar);

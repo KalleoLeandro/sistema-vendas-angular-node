@@ -3,7 +3,7 @@ import { gerarPdf } from '../services/fileServices';
 
 export const gerarPdfByHtml = async (req: Request, res: Response) => {
     try {
-        const dados: string = req.body; // Apenas o corpo da solicitação é o HTML        
+        const dados: string = req.body;     
         const pdfBuffer = await gerarPdf(dados);        
         if (pdfBuffer) {
             res.setHeader('Content-Type', 'application/pdf');

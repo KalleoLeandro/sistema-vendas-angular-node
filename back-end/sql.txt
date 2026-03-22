@@ -1,162 +1,116 @@
-create database sistema_gerencial;
-use sistema_gerencial;
+DROP DATABASE IF EXISTS sistema_gerencial;
+CREATE DATABASE sistema_gerencial
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
-create table endereco(
-	id int PRIMARY key AUTO_INCREMENT,
-    cep varchar(12) not null,
-    rua varchar(255) not null,
-    numero int not null,
-    complemento varchar(255),
-    bairro varchar(255) not null,
-    cidade varchar(255) not null,
-    uf varchar(2) not null 
+USE sistema_gerencial;
+
+CREATE TABLE endereco (
+    id INT NOT NULL AUTO_INCREMENT,
+    cep VARCHAR(12) NOT NULL,
+    rua VARCHAR(255) NOT NULL,
+    numero INT NOT NULL,
+    complemento VARCHAR(255) NULL,
+    bairro VARCHAR(255) NOT NULL,
+    cidade VARCHAR(255) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-
-create table dados_login(
-    id int primary key AUTO_INCREMENT,
-    login varchar(255) not null, 
-    senha varchar(255) not null,
-    perfil varchar(4) not null    
+CREATE TABLE dados_login (
+    id INT NOT NULL AUTO_INCREMENT,
+    login VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    perfil VARCHAR(4) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_dados_login_login (login)
 );
 
-create table contato(
-	id int primary key AUTO_INCREMENT,
-    telefone varchar(15) not null,
-    celular varchar(15) not null,
-    email varchar(100) not null
+CREATE TABLE contato (
+    id INT NOT NULL AUTO_INCREMENT,
+    telefone VARCHAR(15) NOT NULL,
+    celular VARCHAR(15) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_contato_email (email)
 );
 
-create table usuario (
-	id int PRIMARY key AUTO_INCREMENT,
-    nome varchar(255) not null,
-    cpf varchar(11) not null,
-    data_nascimento date not null,
-    sexo char not null,
-    dados_login_id int not null,
-    endereco_id int not null,
-    contato_id int not null
+CREATE TABLE usuario (
+    id INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    sexo CHAR(1) NOT NULL,
+    dados_login_id INT NOT NULL,
+    endereco_id INT NOT NULL,
+    contato_id INT NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_usuario_cpf (cpf),
+    CONSTRAINT fk_usuario_endereco FOREIGN KEY (endereco_id) REFERENCES endereco(id),
+    CONSTRAINT fk_usuario_dados_login FOREIGN KEY (dados_login_id) REFERENCES dados_login(id),
+    CONSTRAINT fk_usuario_contato FOREIGN KEY (contato_id) REFERENCES contato(id)
 );
 
-insert into endereco(cep,
-    rua, 
-    numero,    
-    bairro,
-    cidade,
-    uf) values('83085-000', 'Rua A', 100, 'Teste', 'Teste', 'PR');
-
-insert into contato(	
-    telefone,
-    celular,
-    email
-) values('4133332222','4199998888', 'teste@teste.com');
-
-insert into dados_login(    
-    login, 
-    senha,
-    perfil  
-) values('admin', 'admin', 'adm');
-
-insert into usuario(nome, cpf, data_nascimento, sexo, dados_login_id, endereco_id, contato_id) 
-values('Master User', '22233344405', '1990-01-01', 'M', 1,1,1);
-
-alter table usuario add FOREIGN key (endereco_id) REFERENCES endereco(id);
-alter table usuario add FOREIGN key (dados_login_id) REFERENCES dados_login(id);
-alter table usuario add FOREIGN key (contato_id) REFERENCES contato(id);
-
-create table produtos(
-	id int primary key AUTO_INCREMENT,
-    nome varchar(255) not null,
-    preco_custo double not null,
-    preco_venda double not null,
-    quantidade int not null,
-    medida varchar(50) not null,
-    categoria varchar(50) not null
+CREATE TABLE produtos (
+    id INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    preco_custo DECIMAL(10,2) NOT NULL,
+    preco_venda DECIMAL(10,2) NOT NULL,
+    quantidade INT NOT NULL,
+    medida VARCHAR(50) NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-INSERT INTO `produtos` (`nome`, `preco_custo`, `preco_venda`, `quantidade`, `medida`, `categoria`) VALUES
-('Arroz', 5.5, 7, 50, 'Kg', 'Alimentos'),
-('Feijão', 4.2, 6, 40, 'Kg', 'Alimentos'),
-('Sabão em Pó', 10, 14.5, 30, 'Kg', 'Limpeza'),
-('Detergente', 2.5, 4, 60, 'Lt', 'Limpeza'),
-('Camiseta', 15, 25, 20, 'Un', 'Vestuário'),
-('Calça Jeans', 30, 50, 15, 'Un', 'Vestuário'),
-('Notebook', 800, 1200, 5, 'Un', 'Eletrônicos'),
-('Fone de Ouvido', 50, 80, 10, 'Un', 'Eletrônicos'),
-('Carrinho de Controle Remoto', 70, 100, 8, 'Un', 'Brinquedos'),
-('Quebra-Cabeça', 15, 25, 12, 'Un', 'Brinquedos'),
-('Bolsa', 40, 65, 25, 'Un', 'Acessórios'),
-('Relógio', 60, 100, 20, 'Un', 'Acessórios'),
-('Detergente Líquido', 5, 8, 20, 'Lt', 'Limpeza'),
-('Tomate', 3.5, 5, 30, 'Kg', 'Alimentos'),
-('Carne', 12, 18, 40, 'Kg', 'Alimentos'),
-('Celular', 500, 800, 7, 'Un', 'Eletrônicos'),
-('Pijama', 20, 35, 18, 'Un', 'Vestuário'),
-('Sapato', 40, 70, 15, 'Un', 'Vestuário'),
-('Barbie', 25, 40, 10, 'Un', 'Brinquedos'),
-('Bola', 10, 15, 20, 'Un', 'Brinquedos'),
-('Óculos de Sol', 15, 25, 22, 'Un', 'Acessórios'),
-('Colar', 30, 50, 15, 'Un', 'Acessórios'),
-('Macarrão', 2, 3.5, 50, 'Kg', 'Alimentos'),
-('Amaciante', 8, 12, 25, 'Lt', 'Limpeza'),
-('Bateria Externa', 20, 35, 12, 'Un', 'Eletrônicos'),
-('Saia', 18, 30, 17, 'Un', 'Vestuário'),
-('Tênis', 50, 80, 13, 'Un', 'Vestuário'),
-('Boneca', 30, 45, 10, 'Un', 'Brinquedos'),
-('Quebra-Cabeça 3D', 30, 50, 8, 'Un', 'Brinquedos'),
-('Chapéu', 12, 20, 20, 'Un', 'Acessórios'),
-('Anel', 25, 40, 15, 'Un', 'Acessórios'),
-('Açúcar', 4, 6, 35, 'Kg', 'Alimentos'),
-('Sabonete', 1.5, 3, 70, 'Un', 'Limpeza'),
-('Tablet', 300, 500, 9, 'Un', 'Eletrônicos'),
-('Camisa', 25, 40, 15, 'Un', 'Vestuário'),
-('Vestido', 35, 60, 10, 'Un', 'Vestuário'),
-('Carrinho de Boneca', 40, 65, 7, 'Un', 'Brinquedos'),
-('Quebra-Cabeça Infantil', 12, 20, 15, 'Un', 'Brinquedos'),
-('Carteira', 18, 30, 18, 'Un', 'Acessórios'),
-('Pulseira', 20, 35, 20, 'Un', 'Acessórios'),
-('Café', 10, 15, 40, 'Kg', 'Alimentos'),
-('Limpador Multiuso', 7, 10, 30, 'Lt', 'Limpeza'),
-('TV', 700, 1100, 6, 'Un', 'Eletrônicos'),
-('Blusa', 20, 35, 15, 'Un', 'Vestuário'),
-('Calça Social', 40, 70, 12, 'Un', 'Vestuário'),
-('Carro de Controle Remoto', 80, 120, 6, 'Un', 'Brinquedos'),
-('Quebra-Cabeça Infantil', 12, 20, 14, 'Un', 'Brinquedos'),
-('Boné', 10, 15, 22, 'Un', 'Acessórios'),
-('Brinco', 15, 25, 18, 'Un', 'Acessórios'),
-('Farinha de Trigo', 3.5, 5.5, 25, 'Kg', 'Alimentos'),
-('Lava Louças', 12, 20, 20, 'Lt', 'Limpeza'),
-('Console de Videogame', 400, 600, 8, 'Un', 'Eletrônicos'),
-('Jaqueta', 50, 80, 10, 'Un', 'Vestuário'),
-('Saia Longa', 30, 50, 12, 'Un', 'Vestuário'),
-('Avião de Brinquedo', 25, 40, 10, 'Un', 'Brinquedos'),
-('Quebra-Cabeça 3D', 35, 60, 8, 'Un', 'Brinquedos'),
-('Lenço', 8, 12, 18, 'Un', 'Acessórios'),
-('Colar de Pérolas', 40, 65, 15, 'Un', 'Acessórios'),
-('Leite', 3, 4.5, 30, 'Lt', 'Alimentos'),
-('Sabonete Líquido', 2, 3.5, 50, 'Lt', 'Limpeza'),
-('Câmera Fotográfica', 200, 350, 5, 'Un', 'Eletrônicos'),
-('Gravata', 10, 15, 20, 'Un', 'Vestuário'),
-('Shorts', 15, 25, 18, 'Un', 'Vestuário'),
-('Helicóptero de Controle Remoto', 90, 150, 6, 'Un', 'Brinquedos'),
-('Bola de Futebol', 20, 35, 10, 'Un', 'Brinquedos'),
-('Luvas', 8, 12, 22, 'Un', 'Acessórios'),
-('Óculos de Grau', 60, 100, 15, 'Un', 'Acessórios'),
-('Arroz Integral', 6, 9, 30, 'Kg', 'Alimentos'),
-('Desinfetante', 4.5, 7.5, 20, 'Lt', 'Limpeza'),
-('Impressora', 150, 250, 4, 'Un', 'Eletrônicos'),
-('Camiseta Polo', 25, 40, 16, 'Un', 'Vestuário'),
-('Vestido de Festa', 60, 100, 8, 'Un', 'Vestuário'),
-('Bicicleta', 150, 250, 4, 'Un', 'Brinquedos'),
-('Jogo de Tabuleiro', 20, 35, 12, 'Un', 'Brinquedos'),
-('Cinto', 12, 20, 20, 'Un', 'Acessórios'),
-('Relógio de Pulso', 50, 80, 14, 'Un', 'Acessórios'),
-('Macarrão Instantâneo', 1.5, 3, 40, 'Un', 'Alimentos'),
-('Esponja de Limpeza', 1, 2.5, 80, 'Un', 'Limpeza'),
-('Monitor', 100, 150, 6, 'Un', 'Eletrônicos'),
-('Blazer', 70, 120, 8, 'Un', 'Vestuário'),
-('Sapato Social', 50, 80, 10, 'Un', 'Vestuário'),
-('Lego', 30, 50, 15, 'Un', 'Brinquedos'),
-('Puzzle', 15, 25, 20, 'Un', 'Brinquedos'),
-('Chapéu de Sol', 10, 15, 25, 'Un', 'Acessórios'),
-('Corrente', 20, 35, 18, 'Un', 'Acessórios');
+CREATE TABLE vendas (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    data_venda DATETIME NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_vendas_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
+
+CREATE TABLE lista_venda (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_venda INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_lista_venda_venda FOREIGN KEY (id_venda) REFERENCES vendas(id),
+    CONSTRAINT fk_lista_venda_produto FOREIGN KEY (id_produto) REFERENCES produtos(id)
+);
+
+INSERT INTO endereco (cep, rua, numero, complemento, bairro, cidade, uf)
+VALUES ('83085-000', 'Rua A', 100, NULL, 'Centro', 'Sao Jose dos Pinhais', 'PR');
+
+INSERT INTO contato (telefone, celular, email)
+VALUES ('4133332222', '4199998888', 'admin@sistema.local');
+
+INSERT INTO dados_login (login, senha, perfil)
+VALUES ('admin', 'admin', 'adm');
+
+INSERT INTO usuario (nome, cpf, data_nascimento, sexo, dados_login_id, endereco_id, contato_id)
+VALUES ('Master User', '22233344405', '1990-01-01', 'M', 1, 1, 1);
+
+INSERT INTO produtos (nome, preco_custo, preco_venda, quantidade, medida, categoria) VALUES
+('Arroz', 5.50, 7.00, 50, 'Kg', 'Alimentos'),
+('Feijao', 4.20, 6.00, 40, 'Kg', 'Alimentos'),
+('Sabao em Po', 10.00, 14.50, 30, 'Kg', 'Limpeza'),
+('Detergente', 2.50, 4.00, 60, 'Lt', 'Limpeza'),
+('Camiseta', 15.00, 25.00, 20, 'Un', 'Vestuario'),
+('Calca Jeans', 30.00, 50.00, 15, 'Un', 'Vestuario'),
+('Notebook', 800.00, 1200.00, 5, 'Un', 'Eletronicos'),
+('Fone de Ouvido', 50.00, 80.00, 10, 'Un', 'Eletronicos'),
+('Carrinho de Controle Remoto', 70.00, 100.00, 8, 'Un', 'Brinquedos'),
+('Quebra-Cabeca', 15.00, 25.00, 12, 'Un', 'Brinquedos'),
+('Bolsa', 40.00, 65.00, 25, 'Un', 'Acessorios'),
+('Relogio', 60.00, 100.00, 20, 'Un', 'Acessorios'),
+('Tomate', 3.50, 5.00, 30, 'Kg', 'Alimentos'),
+('Carne', 12.00, 18.00, 40, 'Kg', 'Alimentos'),
+('Celular', 500.00, 800.00, 7, 'Un', 'Eletronicos'),
+('Pijama', 20.00, 35.00, 18, 'Un', 'Vestuario'),
+('Sapato', 40.00, 70.00, 15, 'Un', 'Vestuario'),
+('Barbie', 25.00, 40.00, 10, 'Un', 'Brinquedos'),
+('Bola', 10.00, 15.00, 20, 'Un', 'Brinquedos'),
+('Colar', 30.00, 50.00, 15, 'Un', 'Acessorios');

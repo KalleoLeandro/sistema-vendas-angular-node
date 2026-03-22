@@ -5,7 +5,7 @@ import { retornaIdLogin } from './loginServices';
 export const gravarVenda = async (produtos: Array<any>, token: string) => {
     try {
         const id = await retornaIdLogin(token);
-        const total = produtos.reduce((acumulador, item) => acumulador + item.preco, 0);
+        const total = produtos.reduce((acumulador, item) => acumulador + Number(item.preco || 0), 0);
         const sql = 'insert into vendas(id_usuario, data_venda, total) values(?,?,?)';
         const values = [id, new Date(), total];
         const promisePool = pool.promise();
