@@ -1,258 +1,69 @@
-# Sistema de Vendas Angular + Node
+<div align="center">
 
-Aplicação web para gestão de usuários, produtos e vendas, com frontend em Angular e backend em Node.js/Express usando MySQL.
+# Sistema de Vendas | Angular + Node.js
 
-## Visão geral
+### Gerenciamento de usuários, produtos, estoque e vendas, com API REST em TypeScript e relatórios em PDF.
 
-O projeto é dividido em dois módulos:
+[![GitHub](https://img.shields.io/badge/Ver_no_GitHub-181717?style=for-the-badge&logo=github)](https://github.com/KalleoLeandro/sistema-vendas-angular-node)
+![Documentação](https://img.shields.io/badge/Documentação-pt--BR-0F766E?style=for-the-badge)
 
-- `front-end`: interface web em Angular.
-- `back-end`: API REST em Node.js com TypeScript, autenticação por token e geração de PDF.
+![Angular](https://img.shields.io/badge/Angular-26364A?style=for-the-badge&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-26364A?style=for-the-badge&logoColor=white) ![Express](https://img.shields.io/badge/Express-26364A?style=for-the-badge&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-26364A?style=for-the-badge&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-26364A?style=for-the-badge&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-26364A?style=for-the-badge&logoColor=white) ![Jest](https://img.shields.io/badge/Jest-26364A?style=for-the-badge&logoColor=white) ![Swagger](https://img.shields.io/badge/Swagger-26364A?style=for-the-badge&logoColor=white)
 
-Principais funcionalidades:
+</div>
 
-- login com perfil de acesso
-- cadastro, edição, listagem e exclusão de usuários
-- cadastro, edição, listagem e exclusão de produtos
-- controle de estoque durante a venda
-- emissão de PDF de produtos, usuários e relatório da venda
-- documentação da API via Swagger
+---
 
-## Tecnologias
+## ✨ Visão geral
 
-- Angular 15
-- Node.js
-- Express
-- TypeScript
-- MySQL
-- html-pdf
-- Swagger UI
+Gerenciamento de usuários, produtos, estoque e vendas, com API REST em TypeScript e relatórios em PDF.
 
-## Requisitos
+## 🚀 O que você encontra aqui
 
-Antes de começar, tenha instalado:
+- **Autenticação e perfis de usuário**
+- **CRUD de produtos e usuários**
+- **Carrinho, vendas e controle de estoque**
+- **Relatórios PDF e documentação Swagger**
 
-- Node.js 18+ recomendado
-- npm
-- MySQL 8+ ou compatível
+## 🧰 Tecnologias
 
-## Estrutura do projeto
+`Angular`, `Node.js`, `Express`, `TypeScript`, `MySQL`, `JWT`, `Jest`, `Swagger`.
 
-```text
-sistema-vendas-angular-node/
-|- back-end/
-|- front-end/
-|- README.md
+## 🖼️ Visão técnica / demonstração
+
+```mermaid
+flowchart LR
+ A[Angular] --> B[Express / TypeScript]
+ B --> C[(MySQL)]
+ B --> D[PDF / Swagger]
 ```
 
-## Configuração do banco de dados
-
-O backend está configurado para acessar o banco MySQL com os seguintes dados em [conn.ts](c:/Users/Kalleo/Documents/projeto/sistema-vendas-angular-node/back-end/src/db/conn.ts):
-
-- host: `localhost`
-- user: `root`
-- password: `root`
-- database: `sistema_gerencial`
-
-Se quiser usar outros dados de conexão, ajuste o arquivo [conn.ts](c:/Users/Kalleo/Documents/projeto/sistema-vendas-angular-node/back-end/src/db/conn.ts).
-
-### Criando o banco
-
-Use o script SQL disponível em [sql.txt](c:/Users/Kalleo/Documents/projeto/sistema-vendas-angular-node/back-end/sql.txt).
-
-Ele cria:
-
-- banco `sistema_gerencial`
-- tabelas de usuários, produtos e vendas
-- usuário administrador inicial
-- carga inicial de produtos
-
-### Executando o script
-
-No MySQL:
-
-```sql
-source back-end/sql.txt;
-```
-
-Ou copie e execute o conteúdo do arquivo em seu cliente SQL.
-
-## Configuração do backend
-
-Entre na pasta:
+## ▶️ Como explorar / executar
 
 ```bash
-cd back-end
+# Banco: execute o script back-end/sql.txt no MySQL.
+cd back-end && npm install && npm run start-dev
+# Em outro terminal, na raiz:
+cd front-end && npm install && npm start
 ```
+Interface: `localhost:4200`; API: `localhost:3000`; documentação da API: `localhost:3000/api-docs`. Configure o acesso ao banco em `back-end/src/db/conn.ts`.
 
-Instale as dependências:
+## 📁 Repositório
 
 ```bash
-npm install
+git clone https://github.com/KalleoLeandro/sistema-vendas-angular-node.git
+cd sistema-vendas-angular-node
 ```
 
-Crie um arquivo `.env` dentro de `back-end` com:
+[Consultar os arquivos e o histórico do projeto](https://github.com/KalleoLeandro/sistema-vendas-angular-node)
 
-```env
-PORT=3000
-```
+## 📝 Observações
 
-Inicie o servidor:
+> **Segurança:** substitua as credenciais de demonstração existentes nos scripts/configurações antes de disponibilizar a aplicação.
 
-```bash
-npm run start-dev
-```
+---
 
-Quando tudo estiver certo, o terminal deve exibir:
+<div align="center">
 
-```text
-Servidor rodando na porta 3000
-```
+Desenvolvido e mantido por [Kalleo Leandro](https://github.com/KalleoLeandro).
 
-### Swagger
-
-Com o backend em execução, a documentação da API fica disponível em:
-
-```text
-http://localhost:3000/api-docs
-```
-
-## Configuração do frontend
-
-Entre na pasta:
-
-```bash
-cd front-end
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Inicie a aplicação:
-
-```bash
-npm start
-```
-
-Por padrão, o Angular sobe em:
-
-```text
-http://localhost:4200
-```
-
-## Como usar a aplicação
-
-### 1. Login
-
-Após subir backend, frontend e banco, acesse a tela inicial e faça login com:
-
-- usuário: `admin`
-- senha: `admin`
-
-Esses dados são inseridos pelo script [sql.txt](c:/Users/Kalleo/Documents/projeto/sistema-vendas-angular-node/back-end/sql.txt).
-
-### 2. Usuários
-
-O módulo de usuários permite:
-
-- cadastrar novo usuário
-- listar usuários cadastrados
-- editar usuário existente
-- excluir usuário
-- gerar PDF da listagem
-
-Os dados são distribuídos nas tabelas:
-
-- `usuario`
-- `dados_login`
-- `endereco`
-- `contato`
-
-### 3. Produtos
-
-O módulo de produtos permite:
-
-- cadastrar produto
-- listar produtos
-- editar produto
-- excluir produto
-- gerar PDF da listagem
-
-Os produtos são armazenados na tabela `produtos`.
-
-### 4. Vendas
-
-No módulo de venda é possível:
-
-- pesquisar produtos por nome
-- selecionar a quantidade desejada
-- adicionar item ao carrinho
-- remover item do carrinho
-- atualizar o estoque automaticamente
-- calcular o total da venda
-- finalizar a venda
-- gerar PDF com o relatório da venda
-
-Ao finalizar a venda:
-
-- o estoque é reduzido
-- a venda é gravada na tabela `vendas`
-- os itens são gravados na tabela `lista_venda`
-- um PDF é emitido com:
-  - produto
-  - quantidade
-  - valor unitário
-  - total por item
-  - total geral da venda
-
-## Fluxo interno da aplicação
-
-### Autenticação
-
-- o login valida usuário e senha na tabela `dados_login`
-- ao autenticar, o backend gera um token JWT
-- o frontend armazena o token em `sessionStorage`
-- rotas protegidas exigem o header `authorization`
-
-### Controle de estoque
-
-No carrinho de vendas:
-
-- ao adicionar um produto, a quantidade é reservada no estoque
-- ao remover um produto do carrinho, a quantidade retorna ao estoque
-- ao finalizar a venda, os itens permanecem baixados no estoque
-
-## Scripts úteis
-
-### Backend
-
-```bash
-npm run start-dev
-npm test
-```
-
-### Frontend
-
-```bash
-npm start
-npm run build
-npm test
-```
-
-## Observações
-
-- o frontend está configurado para consumir a API em `http://localhost:3000/`
-- o projeto usa geração de PDF baseada em HTML
-- o build do frontend pode acusar budget excedido, mas isso é uma configuração do Angular e não impede o uso em modo desenvolvimento
-
-## Próximas melhorias sugeridas
-
-- mover a configuração do banco para `.env`
-- criptografar senhas no banco
-- melhorar o controle transacional do estoque
-- versionar migrations de banco
-- adicionar testes automatizados para o fluxo de venda
-
+</div>
